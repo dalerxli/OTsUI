@@ -1,0 +1,1817 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1114</width>
+    <height>848</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="mainGuiHor">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QFrame" name="conSavLogFrame">
+      <property name="minimumSize">
+       <size>
+        <width>250</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>251</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,3,6,0">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <item>
+        <widget class="QGroupBox" name="connBox">
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Connection</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMaximumSize</enum>
+          </property>
+          <item>
+           <layout class="QFormLayout" name="connForm">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMaximumSize</enum>
+            </property>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="ipAddLine"/>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="ipAddLab">
+              <property name="text">
+               <string>IP address</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="portLine"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="portLab">
+              <property name="text">
+               <string>Port</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="connectBtn">
+            <property name="text">
+             <string>CONNECT</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="saveBox">
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Save settings</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMaximumSize</enum>
+          </property>
+          <item>
+           <layout class="QGridLayout" name="saveGrid" columnstretch="1,1">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMaximumSize</enum>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="dataDirLab">
+              <property name="text">
+               <string>Data directory</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="dataDirLine"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="dataDirBtn">
+              <property name="text">
+               <string>Browse...</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="logDirLab">
+              <property name="text">
+               <string>Log directory</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="logDirLine"/>
+            </item>
+            <item row="3" column="1">
+             <widget class="QPushButton" name="logDirBtn">
+              <property name="text">
+               <string>Browse</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="logNameLab">
+              <property name="text">
+               <string>Log file name</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLineEdit" name="logNameLine"/>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="parDirLab">
+              <property name="text">
+               <string>Param.s directory</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLineEdit" name="parDirLine"/>
+            </item>
+            <item row="6" column="1">
+             <widget class="QPushButton" name="parDirBtn">
+              <property name="text">
+               <string>Browse</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="parNameLab">
+              <property name="text">
+               <string>Param.s file name</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QLineEdit" name="parNameLine"/>
+            </item>
+            <item row="8" column="0">
+             <widget class="QPushButton" name="parSaveBtn">
+              <property name="text">
+               <string>Save Param.s</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="QPushButton" name="parLoadBtn">
+              <property name="text">
+               <string>Load Param.s</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTextEdit" name="logText">
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="lockFbBtn">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>LOCK FEED-BACK</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="sysCtrlVert" stretch="7,4">
+      <item>
+       <layout class="QHBoxLayout" name="plotNfbHor" stretch="0,2">
+        <item>
+         <widget class="QTabWidget" name="plotTabs">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="signalTab">
+           <attribute name="title">
+            <string>Signals</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_3" rowstretch="3,1,2,1">
+            <item row="3" column="3">
+             <widget class="QComboBox" name="sig3selCmb">
+              <property name="currentIndex">
+               <number>2</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>X</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Y</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Z</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QComboBox" name="sig2selCmb">
+              <property name="currentIndex">
+               <number>1</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>X</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Y</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Z</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QPushButton" name="scaleSig1Btn">
+              <property name="text">
+               <string>SCALE</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QCheckBox" name="autoScaleSig1Check">
+              <property name="text">
+               <string>Auto scale</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="4">
+             <widget class="QPushButton" name="scaleSig3Btn">
+              <property name="text">
+               <string>SCALE</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QPushButton" name="scaleSig2Btn">
+              <property name="text">
+               <string>SCALE</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QCheckBox" name="autoScaleSig2Check">
+              <property name="text">
+               <string>Auto scale</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="5">
+             <widget class="QCheckBox" name="autScaleSig3Check">
+              <property name="text">
+               <string>Auto scale</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="6">
+             <widget class="QGraphicsView" name="sig1Plot"/>
+            </item>
+            <item row="2" column="0" colspan="3">
+             <widget class="QGraphicsView" name="sig2Plot"/>
+            </item>
+            <item row="2" column="3" colspan="3">
+             <widget class="QGraphicsView" name="sig3Plot"/>
+            </item>
+            <item row="1" column="0" colspan="3">
+             <widget class="QComboBox" name="sig1selCmb">
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <item>
+               <property name="text">
+                <string>X</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Y</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Z</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="psTab">
+           <attribute name="title">
+            <string>Power spectrums</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_4" rowstretch="3,1,2,1">
+            <item row="3" column="2">
+             <widget class="QCheckBox" name="autoScalePs2Check">
+              <property name="text">
+               <string>Auto scale</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QComboBox" name="ps2selCmb">
+              <property name="currentIndex">
+               <number>1</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>X</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Y</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Z</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="3" column="4">
+             <widget class="QPushButton" name="scalePs3Btn">
+              <property name="text">
+               <string>SCALE</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QPushButton" name="scalePs1Btn">
+              <property name="text">
+               <string>SCALE</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="3">
+             <widget class="QComboBox" name="ps2selCmb_2">
+              <property name="currentIndex">
+               <number>2</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>X</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Y</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Z</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QCheckBox" name="autoScalePs1Check">
+              <property name="text">
+               <string>Auto scale</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QPushButton" name="scalePs2Btn">
+              <property name="text">
+               <string>SCALE</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="5">
+             <widget class="QCheckBox" name="autoScalePs3Check">
+              <property name="text">
+               <string>Auto scale</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="6">
+             <widget class="QGraphicsView" name="powSpec1Plot"/>
+            </item>
+            <item row="2" column="0" colspan="3">
+             <widget class="QGraphicsView" name="powSpec2Plot"/>
+            </item>
+            <item row="2" column="3" colspan="3">
+             <widget class="QGraphicsView" name="powSpec3Plot"/>
+            </item>
+            <item row="1" column="0" colspan="3">
+             <widget class="QComboBox" name="ps1selCmb">
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <item>
+               <property name="text">
+                <string>X</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Y</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Z</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="fbFrame">
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetMinAndMaxSize</enum>
+           </property>
+           <item>
+            <widget class="QToolBox" name="fbToolBox">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <widget class="QWidget" name="piPage">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>180</width>
+                <height>394</height>
+               </rect>
+              </property>
+              <attribute name="label">
+               <string>PI controller parameters</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_6" columnstretch="1,0,0">
+               <item row="6" column="0">
+                <widget class="QLabel" name="zPLab">
+                 <property name="text">
+                  <string>P</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="zILab">
+                 <property name="text">
+                  <string>I</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="2">
+                <widget class="QDoubleSpinBox" name="zPNumDbl"/>
+               </item>
+               <item row="6" column="1">
+                <widget class="QDial" name="zPDial"/>
+               </item>
+               <item row="3" column="1">
+                <widget class="QDial" name="xyIDial"/>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDial" name="xyPDial"/>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="xyILab">
+                 <property name="text">
+                  <string>I</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="2">
+                <widget class="QDoubleSpinBox" name="zINumDbl"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="xyPLab">
+                 <property name="text">
+                  <string>P</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="xyLab">
+                 <property name="text">
+                  <string>X-Y</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QDoubleSpinBox" name="xyPNumDbl"/>
+               </item>
+               <item row="7" column="1">
+                <widget class="QDial" name="zIDial"/>
+               </item>
+               <item row="3" column="2">
+                <widget class="QDoubleSpinBox" name="xyINumDbl"/>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="zLab">
+                 <property name="text">
+                  <string>Z</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0" colspan="3">
+                <widget class="Line" name="line_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0" colspan="3">
+                <widget class="QPushButton" name="setFbBtn">
+                 <property name="text">
+                  <string>SET PI PARAMETERS</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="xyFbOnCheck">
+                 <property name="text">
+                  <string>FB ON</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QCheckBox" name="zFbOnCheck">
+                 <property name="text">
+                  <string>FB ON</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="padPage">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>180</width>
+                <height>394</height>
+               </rect>
+              </property>
+              <attribute name="label">
+               <string>Optical trap control pad</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,2">
+               <item>
+                <widget class="QGraphicsView" name="trapPadPlot">
+                 <property name="maximumSize">
+                  <size>
+                   <width>180</width>
+                   <height>180</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QGridLayout" name="trapPadSpeedGrid" rowstretch="1,0,1,0,0,0,0,0" columnstretch="2,0">
+                 <item row="3" column="0">
+                  <widget class="QSlider" name="ySpeedTrapPadSlider">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="xSpeedTrapPadLab">
+                   <property name="text">
+                    <string>X speed [nm/s]</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <spacer name="verticalSpacer_10">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="ySpeedTrapPadLab">
+                   <property name="text">
+                    <string>Y speed [nm/s]</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QDoubleSpinBox" name="ySpeedTrapPadNumDbl"/>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="xSpeedTrapPadNumDbl"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QSlider" name="xSpeedTrapPadSlider">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="0">
+                  <spacer name="verticalSpacer_4">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="4" column="0">
+                  <spacer name="verticalSpacer_3">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="7" column="0">
+                  <spacer name="verticalSpacer_5">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="otherPage">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>180</width>
+                <height>394</height>
+               </rect>
+              </property>
+              <attribute name="label">
+               <string>Other parameters</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_11">
+               <item row="1" column="2">
+                <widget class="QDoubleSpinBox" name="yOffSetNumDbl"/>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDial" name="yOffSetDial"/>
+               </item>
+               <item row="0" column="1">
+                <widget class="QDial" name="xOffSetDial"/>
+               </item>
+               <item row="0" column="2">
+                <widget class="QDoubleSpinBox" name="xOffSetNumDbl"/>
+               </item>
+               <item row="2" column="2">
+                <widget class="QDoubleSpinBox" name="zOffSetNumDbl"/>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="zOffSetLab">
+                 <property name="text">
+                  <string>Z offset</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QDial" name="zOffSetDial"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="yOffSetLab">
+                 <property name="text">
+                  <string>Y offset</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="xOffSetLab">
+                 <property name="text">
+                  <string>X offset</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="posNmodHor" stretch="8,1,15">
+        <item>
+         <widget class="QGraphicsView" name="trapPosXYPlot">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>370</width>
+            <height>370</height>
+           </size>
+          </property>
+          <property name="sizeIncrement">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGraphicsView" name="trapPosZPlot">
+          <property name="maximumSize">
+           <size>
+            <width>71</width>
+            <height>370</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTabWidget" name="modTabs">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>370</height>
+           </size>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="calibTab">
+           <attribute name="title">
+            <string>Calibration</string>
+           </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="4,2,2">
+            <item>
+             <widget class="QStackedWidget" name="calibStack">
+              <property name="currentIndex">
+               <number>1</number>
+              </property>
+              <widget class="QWidget" name="passiveCalPage">
+               <layout class="QFormLayout" name="formLayout">
+                <property name="fieldGrowthPolicy">
+                 <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+                </property>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="passiveCalDurLab">
+                  <property name="text">
+                   <string>Duration [s]</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QDoubleSpinBox" name="passiveCalDurNumDbl"/>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="passiveCalMaxFreqLab">
+                  <property name="text">
+                   <string>Max. frequency [Hz]</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="passiveLab">
+                  <property name="text">
+                   <string>Passive</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QDoubleSpinBox" name="passiveCalMaxFreq"/>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="passiveCalAvgLav">
+                  <property name="text">
+                   <string>Averages</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QSpinBox" name="passiveCalAvgNum"/>
+                </item>
+                <item row="7" column="0" colspan="2">
+                 <widget class="QPushButton" name="passiveCalStartBtn">
+                  <property name="text">
+                   <string>START</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="0">
+                 <spacer name="verticalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="6" column="0">
+                 <spacer name="verticalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="activeCalPage">
+               <layout class="QVBoxLayout" name="verticalLayout_11" stretch="1,1,0">
+                <item>
+                 <layout class="QGridLayout" name="activeCalSinsConfGrid" rowstretch="0,3,2">
+                  <item row="0" column="2">
+                   <widget class="QLabel" name="activeCalYLab">
+                    <property name="text">
+                     <string>Y</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="3">
+                   <widget class="QSpinBox" name="activeCalZAmplNumDbl"/>
+                  </item>
+                  <item row="0" column="3">
+                   <widget class="QLabel" name="activeCalZLab">
+                    <property name="text">
+                     <string>Z</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="activeCalAmpLab">
+                    <property name="text">
+                     <string>Ampl [nm]</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QSpinBox" name="activeCalXAmplNumDbl"/>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="activeCalLab">
+                    <property name="text">
+                     <string>Active</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QSpinBox" name="activeCalYAmplNumDbl"/>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="activeCalXLab">
+                    <property name="text">
+                     <string>X</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="activeCalFreqLab">
+                    <property name="text">
+                     <string>Freq [Hz]</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QSpinBox" name="activeCalXFreqNumDbl"/>
+                  </item>
+                  <item row="2" column="2">
+                   <widget class="QSpinBox" name="activeCalYFreqNumDbl"/>
+                  </item>
+                  <item row="2" column="3">
+                   <widget class="QSpinBox" name="activeCalYFreqNumDbl_2"/>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QFormLayout" name="activeConfForm">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="activeCalDurLab">
+                    <property name="text">
+                     <string>Duration [s]</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QSpinBox" name="activeCalAvgNum"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="activeCalMaxFreqLab">
+                    <property name="text">
+                     <string>Max freq [Hz]</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="activeCalAvgLab">
+                    <property name="text">
+                     <string>Averages</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QDoubleSpinBox" name="activeCalDurNumDbl"/>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="activeCalMaxFreqNumDbl"/>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="activeCalStartBtn">
+                  <property name="text">
+                   <string>START</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="genParVert">
+              <item>
+               <widget class="QGroupBox" name="genParBox">
+                <property name="title">
+                 <string>General Params</string>
+                </property>
+                <layout class="QFormLayout" name="formLayout_2">
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="radiusNumDbl"/>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="dynViscNumDbl"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="dynViscLab">
+                   <property name="text">
+                    <string>Dyn. Visc.</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="radiusLab">
+                   <property name="text">
+                    <string>Radius [um]</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_5">
+              <property name="title">
+               <string>Results</string>
+              </property>
+              <layout class="QFormLayout" name="formLayout_7">
+               <property name="fieldGrowthPolicy">
+                <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="kxLab">
+                 <property name="text">
+                  <string>kx</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QDoubleSpinBox" name="kxNumDbl"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="kyLab">
+                 <property name="text">
+                  <string>ky</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="kyNumDbl"/>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="kzLab">
+                 <property name="text">
+                  <string>kz</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QDoubleSpinBox" name="kzNumDbl"/>
+               </item>
+               <item row="3" column="1">
+                <widget class="QDoubleSpinBox" name="SxNumDbl"/>
+               </item>
+               <item row="4" column="1">
+                <widget class="QDoubleSpinBox" name="SyNumDbl"/>
+               </item>
+               <item row="5" column="1">
+                <widget class="QDoubleSpinBox" name="SzNumDbl"/>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="SxLab">
+                 <property name="text">
+                  <string>Sx</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="SyLab">
+                 <property name="text">
+                  <string>Sy</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="SzLab">
+                 <property name="text">
+                  <string>Sz</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="stdExpTab">
+           <attribute name="title">
+            <string>Standard experiment</string>
+           </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="3,2">
+            <item>
+             <layout class="QGridLayout" name="stdExpConfigGrid" rowstretch="0,1,1,1,1,0" columnstretch="1,2,2">
+              <item row="1" column="0">
+               <widget class="QLabel" name="stdExpXLab">
+                <property name="font">
+                 <font>
+                  <underline>false</underline>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>X</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="stdExpXSetPntNumDbl"/>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="stdExpSetPointLab">
+                <property name="text">
+                 <string>Set point [nm]</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLineEdit" name="stdExpYEqForceVsMaxLine"/>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="stdExpAxisLab">
+                <property name="text">
+                 <string>Axis</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="stdExpZLab">
+                <property name="text">
+                 <string>Z</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QDoubleSpinBox" name="stdExpZSetPntNumDbl"/>
+              </item>
+              <item row="3" column="2">
+               <widget class="QLineEdit" name="stdExpZEqForceVsMaxLine"/>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLineEdit" name="stdExpXEqForceVsMaxLine"/>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="stdExpYLab">
+                <property name="text">
+                 <string>Y</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="stdExpEqForceVsMaxLab">
+                <property name="text">
+                 <string>S.P. Force [pN]/Max force[pN]</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QDoubleSpinBox" name="stdExpYSetPntNumDbl"/>
+              </item>
+              <item row="4" column="0" colspan="3">
+               <widget class="Line" name="line">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="2">
+               <widget class="QDoubleSpinBox" name="stdExpDurNumDbl"/>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLabel" name="stdExpDurLab">
+                <property name="text">
+                 <string>Duration [s]</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="fbSchedVert" stretch="1,1">
+              <item>
+               <widget class="QGroupBox" name="fbSchedBox">
+                <property name="title">
+                 <string>Feed Back time scheduler</string>
+                </property>
+                <layout class="QFormLayout" name="formLayout_12">
+                 <property name="fieldGrowthPolicy">
+                  <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+                 </property>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="fbSchedNumIntLab">
+                   <property name="text">
+                    <string>Number of intervals</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="fbSchedNumIntNumDbl"/>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="fbSchedOnDurLab">
+                   <property name="text">
+                    <string>On part dur. [s]</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="fbSchedOnDurNumDbl"/>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="fbSchedOffDurLab">
+                   <property name="text">
+                    <string>Off part dur. [s]</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="fbSchedOffDurNumDbl"/>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QCheckBox" name="fbSchedStartOnCheck">
+                   <property name="text">
+                    <string>Start On</string>
+                   </property>
+                   <property name="tristate">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="stdExpStartBtn">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>START</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="custExpTab">
+           <attribute name="title">
+            <string>Custom experiment</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_12">
+            <item>
+             <widget class="QStackedWidget" name="customExpAxisStack">
+              <property name="currentIndex">
+               <number>2</number>
+              </property>
+              <widget class="QWidget" name="customExpXPage">
+               <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1">
+                <item>
+                 <layout class="QGridLayout" name="customExpXConfGrid" columnstretch="1,2,2">
+                  <item row="3" column="1">
+                   <widget class="QDoubleSpinBox" name="customExpXOnDurNumDbl"/>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="customExpXNumIntLab">
+                    <property name="text">
+                     <string>Number of intervals</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="1">
+                   <widget class="QDoubleSpinBox" name="customExpXOffDurNumDbl"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QCheckBox" name="customExpXMultiIntCheck">
+                    <property name="text">
+                     <string>Multi interval</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="customExpXlab">
+                    <property name="text">
+                     <string>X axis</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="0">
+                   <widget class="QCheckBox" name="customExpXStartOnCheck">
+                    <property name="text">
+                     <string>Start On</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QSpinBox" name="customExpXNumIntNumDbl"/>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QLabel" name="customExpXOffDurLab">
+                    <property name="text">
+                     <string>Off part duration [s]</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="customExpXOnDurLab">
+                    <property name="text">
+                     <string>On part duration [s]</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="2">
+                   <spacer name="horizontalSpacer">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QGridLayout" name="customExpXWFGrid" columnstretch="2,1,1,1" columnminimumwidth="0,0,0,0">
+                  <item row="1" column="2">
+                   <widget class="QDoubleSpinBox" name="customExpXAmplNumDbl"/>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="customExpXWFLab">
+                    <property name="text">
+                     <string>Waveform type</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="customExpXFreqLab">
+                    <property name="text">
+                     <string>Frequency [Hz]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QLabel" name="customExpXAmplLab">
+                    <property name="text">
+                     <string>Amplitude [nm]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="customExpXFreqNumDbl"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QComboBox" name="customExpXWFCmb"/>
+                  </item>
+                  <item row="1" column="3">
+                   <widget class="QLineEdit" name="customExpXEqForceVsMaxLine"/>
+                  </item>
+                  <item row="0" column="3">
+                   <widget class="QLabel" name="customExpXEqForceVsMaxLab">
+                    <property name="text">
+                     <string>Force ampl. [pN]/Max. force [pN]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="customExpYPage">
+               <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,1">
+                <item>
+                 <layout class="QGridLayout" name="customExpYConfGrid" columnstretch="1,2,2">
+                  <item row="2" column="1">
+                   <widget class="QSpinBox" name="customExpYNumIntNumDbl"/>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QDoubleSpinBox" name="customExpYOnDurNumDbl"/>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QLabel" name="customExpYOffDurLab">
+                    <property name="text">
+                     <string>Off part duration [s]</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="0">
+                   <widget class="QCheckBox" name="customExpYStartOnCheck">
+                    <property name="text">
+                     <string>Start On</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="1">
+                   <widget class="QDoubleSpinBox" name="customExpYOffDurNumDbl"/>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="customExpYNumIntLab">
+                    <property name="text">
+                     <string>Number of intervals</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="customExpYlab">
+                    <property name="text">
+                     <string>Y axis</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="customExpYOnDurLab">
+                    <property name="text">
+                     <string>On part duration [s]</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QCheckBox" name="customExpYMultiIntCheck">
+                    <property name="text">
+                     <string>Multi interval</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="2">
+                   <spacer name="horizontalSpacer_2">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QGridLayout" name="customExpYWFGrid" columnstretch="2,1,1,1" columnminimumwidth="0,0,0,0">
+                  <item row="1" column="2">
+                   <widget class="QDoubleSpinBox" name="customExpYAmplNumDbl"/>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="customExpYWFLab">
+                    <property name="text">
+                     <string>Waveform type</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="customExpYFreqLab">
+                    <property name="text">
+                     <string>Frequency [Hz]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QLabel" name="customExpYAmplLab">
+                    <property name="text">
+                     <string>Amplitude [nm]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="customExpYFreqNumDbl"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QComboBox" name="customExpYWFCmb"/>
+                  </item>
+                  <item row="1" column="3">
+                   <widget class="QLineEdit" name="customExpYEqForceVsMaxLine"/>
+                  </item>
+                  <item row="0" column="3">
+                   <widget class="QLabel" name="customExpYEqForceVsMaxLab">
+                    <property name="text">
+                     <string>Force ampl. [pN]/Max. force [pN]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="customExpZPage">
+               <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,1">
+                <item>
+                 <layout class="QGridLayout" name="customExpZConfGrid" columnstretch="1,2,2">
+                  <item row="1" column="0">
+                   <widget class="QCheckBox" name="customExpZMultiIntCheck">
+                    <property name="text">
+                     <string>Multi interval</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="customExpZOnDurLab">
+                    <property name="text">
+                     <string>On part duration [s]</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QDoubleSpinBox" name="customExpZOnDurNumDbl"/>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QLabel" name="customExpZOffDurLab">
+                    <property name="text">
+                     <string>Off part duration [s]</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="1">
+                   <widget class="QDoubleSpinBox" name="customExpZOffDurNumDbl"/>
+                  </item>
+                  <item row="5" column="0">
+                   <widget class="QCheckBox" name="customExpZStartOnCheck">
+                    <property name="text">
+                     <string>Start On</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="customExpZNumIntLab">
+                    <property name="text">
+                     <string>Number of intervals</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QSpinBox" name="customExpZNumIntNumDbl"/>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="customExpZlab">
+                    <property name="text">
+                     <string>Z axis</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="2">
+                   <spacer name="horizontalSpacer_3">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QGridLayout" name="customExpZWFGrid" columnstretch="2,1,1,1" columnminimumwidth="0,0,0,0">
+                  <item row="1" column="2">
+                   <widget class="QDoubleSpinBox" name="customExpZAmplNumDbl"/>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="customExpZWFLab">
+                    <property name="text">
+                     <string>Waveform type</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="customExpZFreqLab">
+                    <property name="text">
+                     <string>Frequency [Hz]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QLabel" name="customExpZAmplLab">
+                    <property name="text">
+                     <string>Amplitude [nm]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="customExpZFreqNumDbl"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QComboBox" name="customExpZWFCmb"/>
+                  </item>
+                  <item row="1" column="3">
+                   <widget class="QLineEdit" name="customExpZEqForceVsMaxLine"/>
+                  </item>
+                  <item row="0" column="3">
+                   <widget class="QLabel" name="customExpZEqForceVsMaxLab">
+                    <property name="text">
+                     <string>Force ampl. [pN]/Max. force [pN]</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="customExpStartBtn">
+              <property name="text">
+               <string>START</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1114</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
