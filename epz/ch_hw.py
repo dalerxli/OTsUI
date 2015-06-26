@@ -1,6 +1,6 @@
-import epz3 as epz
+import epz.epz3 as epz
 epz.EPSERVER = '193.43.20.118'
-import epdspic as pic
+import epz.epdspic as pic
 
 class DACvalue(epz.HWparameter):
 

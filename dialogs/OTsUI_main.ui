@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>OTsUI_main</class>
+ <widget class="QMainWindow" name="OTsUI_main">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -19,8 +19,8 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="mainGuiHor">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+  <widget class="QWidget" name="mainGuiWid">
+   <layout class="QHBoxLayout" name="mainGuiHor">
     <item>
      <widget class="QFrame" name="conSavLogFrame">
       <property name="minimumSize">
@@ -41,7 +41,7 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,3,6,0">
+      <layout class="QVBoxLayout" name="conSavLogVert" stretch="1,3,6,0">
        <property name="sizeConstraint">
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
@@ -56,7 +56,7 @@
          <property name="title">
           <string>Connection</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_7">
+         <layout class="QVBoxLayout" name="connBoxVert">
           <property name="sizeConstraint">
            <enum>QLayout::SetMaximumSize</enum>
           </property>
@@ -108,7 +108,7 @@
          <property name="title">
           <string>Save settings</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_8">
+         <layout class="QVBoxLayout" name="saveBoxVert">
           <property name="sizeConstraint">
            <enum>QLayout::SetMaximumSize</enum>
           </property>
@@ -252,7 +252,7 @@
            <attribute name="title">
             <string>Signals</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_3" rowstretch="3,1,2,1">
+           <layout class="QGridLayout" name="signalTabGrid" rowstretch="3,1,2,1">
             <item row="3" column="3">
              <widget class="QComboBox" name="sig3selCmb">
               <property name="currentIndex">
@@ -376,7 +376,7 @@
            <attribute name="title">
             <string>Power spectrums</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_4" rowstretch="3,1,2,1">
+           <layout class="QGridLayout" name="psTabGrid" rowstretch="3,1,2,1">
             <item row="3" column="2">
              <widget class="QCheckBox" name="autoScalePs2Check">
               <property name="text">
@@ -421,7 +421,7 @@
              </widget>
             </item>
             <item row="3" column="3">
-             <widget class="QComboBox" name="ps2selCmb_2">
+             <widget class="QComboBox" name="ps3selCmb">
               <property name="currentIndex">
                <number>2</number>
               </property>
@@ -518,7 +518,7 @@
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_10">
+          <layout class="QVBoxLayout" name="fbFrameVert">
            <property name="sizeConstraint">
             <enum>QLayout::SetMinAndMaxSize</enum>
            </property>
@@ -537,21 +537,21 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="piPage">
               <property name="geometry">
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>180</width>
-                <height>394</height>
+                <width>147</width>
+                <height>320</height>
                </rect>
               </property>
               <attribute name="label">
                <string>PI controller parameters</string>
               </attribute>
-              <layout class="QGridLayout" name="gridLayout_6" columnstretch="1,0,0">
+              <layout class="QGridLayout" name="piGrid" columnstretch="1,0,0">
                <item row="6" column="0">
                 <widget class="QLabel" name="zPLab">
                  <property name="text">
@@ -660,9 +660,9 @@
               <attribute name="label">
                <string>Optical trap control pad</string>
               </attribute>
-              <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,2">
+              <layout class="QVBoxLayout" name="padVert" stretch="2,2">
                <item>
-                <widget class="QGraphicsView" name="trapPadPlot">
+                <widget class="QGraphicsView" name="trpPadPlot">
                  <property name="maximumSize">
                   <size>
                    <width>180</width>
@@ -768,14 +768,14 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>180</width>
-                <height>394</height>
+                <width>167</width>
+                <height>180</height>
                </rect>
               </property>
               <attribute name="label">
                <string>Other parameters</string>
               </attribute>
-              <layout class="QGridLayout" name="gridLayout_11">
+              <layout class="QGridLayout" name="otherGrid">
                <item row="1" column="2">
                 <widget class="QDoubleSpinBox" name="yOffSetNumDbl"/>
                </item>
@@ -825,22 +825,28 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="posNmodHor" stretch="8,1,15">
+       <layout class="QHBoxLayout" name="posNmodHor" stretch="0,1,15">
         <item>
          <widget class="QGraphicsView" name="trapPosXYPlot">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>280</width>
+            <height>280</height>
+           </size>
+          </property>
           <property name="maximumSize">
            <size>
-            <width>370</width>
-            <height>370</height>
+            <width>280</width>
+            <height>280</height>
            </size>
           </property>
           <property name="sizeIncrement">
@@ -853,10 +859,16 @@
         </item>
         <item>
          <widget class="QGraphicsView" name="trapPosZPlot">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>280</height>
+           </size>
+          </property>
           <property name="maximumSize">
            <size>
             <width>71</width>
-            <height>370</height>
+            <height>280</height>
            </size>
           </property>
          </widget>
@@ -869,10 +881,16 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>280</height>
+           </size>
+          </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>370</height>
+            <height>280</height>
            </size>
           </property>
           <property name="currentIndex">
@@ -882,14 +900,14 @@
            <attribute name="title">
             <string>Calibration</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="4,2,2">
+           <layout class="QHBoxLayout" name="calibTabHor" stretch="4,2,2">
             <item>
              <widget class="QStackedWidget" name="calibStack">
               <property name="currentIndex">
                <number>1</number>
               </property>
               <widget class="QWidget" name="passiveCalPage">
-               <layout class="QFormLayout" name="formLayout">
+               <layout class="QFormLayout" name="passiveCalForm">
                 <property name="fieldGrowthPolicy">
                  <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
                 </property>
@@ -966,7 +984,7 @@
                </layout>
               </widget>
               <widget class="QWidget" name="activeCalPage">
-               <layout class="QVBoxLayout" name="verticalLayout_11" stretch="1,1,0">
+               <layout class="QVBoxLayout" name="ativeCalVert" stretch="1,1,0">
                 <item>
                  <layout class="QGridLayout" name="activeCalSinsConfGrid" rowstretch="0,3,2">
                   <item row="0" column="2">
@@ -1042,6 +1060,9 @@
                 </item>
                 <item>
                  <layout class="QFormLayout" name="activeConfForm">
+                  <property name="fieldGrowthPolicy">
+                   <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+                  </property>
                   <item row="0" column="0">
                    <widget class="QLabel" name="activeCalDurLab">
                     <property name="text">
@@ -1049,8 +1070,8 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="2" column="1">
-                   <widget class="QSpinBox" name="activeCalAvgNum"/>
+                  <item row="0" column="1">
+                   <widget class="QDoubleSpinBox" name="activeCalDurNumDbl"/>
                   </item>
                   <item row="1" column="0">
                    <widget class="QLabel" name="activeCalMaxFreqLab">
@@ -1059,6 +1080,9 @@
                     </property>
                    </widget>
                   </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="activeCalMaxFreqNumDbl"/>
+                  </item>
                   <item row="2" column="0">
                    <widget class="QLabel" name="activeCalAvgLab">
                     <property name="text">
@@ -1066,11 +1090,8 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="1">
-                   <widget class="QDoubleSpinBox" name="activeCalDurNumDbl"/>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QDoubleSpinBox" name="activeCalMaxFreqNumDbl"/>
+                  <item row="2" column="1">
+                   <widget class="QSpinBox" name="activeCalAvgNum"/>
                   </item>
                  </layout>
                 </item>
@@ -1092,7 +1113,7 @@
                 <property name="title">
                  <string>General Params</string>
                 </property>
-                <layout class="QFormLayout" name="formLayout_2">
+                <layout class="QFormLayout" name="genParForm">
                  <item row="0" column="1">
                   <widget class="QDoubleSpinBox" name="radiusNumDbl"/>
                  </item>
@@ -1119,7 +1140,7 @@
              </layout>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_5">
+             <widget class="QGroupBox" name="calResultsBox">
               <property name="title">
                <string>Results</string>
               </property>
@@ -1196,7 +1217,7 @@
            <attribute name="title">
             <string>Standard experiment</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="3,2">
+           <layout class="QHBoxLayout" name="stdExpHor" stretch="3,2">
             <item>
              <layout class="QGridLayout" name="stdExpConfigGrid" rowstretch="0,1,1,1,1,0" columnstretch="1,2,2">
               <item row="1" column="0">
@@ -1388,14 +1409,14 @@
            <attribute name="title">
             <string>Custom experiment</string>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_12">
+           <layout class="QVBoxLayout" name="custExpVert">
             <item>
              <widget class="QStackedWidget" name="customExpAxisStack">
               <property name="currentIndex">
                <number>2</number>
               </property>
               <widget class="QWidget" name="customExpXPage">
-               <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,1">
+               <layout class="QVBoxLayout" name="custExpXVert" stretch="1,1">
                 <item>
                  <layout class="QGridLayout" name="customExpXConfGrid" columnstretch="1,2,2">
                   <item row="3" column="1">
@@ -1523,7 +1544,7 @@
                </layout>
               </widget>
               <widget class="QWidget" name="customExpYPage">
-               <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,1">
+               <layout class="QVBoxLayout" name="custExpYVert" stretch="1,1">
                 <item>
                  <layout class="QGridLayout" name="customExpYConfGrid" columnstretch="1,2,2">
                   <item row="2" column="1">
@@ -1651,7 +1672,7 @@
                </layout>
               </widget>
               <widget class="QWidget" name="customExpZPage">
-               <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,1">
+               <layout class="QVBoxLayout" name="custExpZVert" stretch="1,1">
                 <item>
                  <layout class="QGridLayout" name="customExpZConfGrid" columnstretch="1,2,2">
                   <item row="1" column="0">

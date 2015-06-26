@@ -1,0 +1,1 @@
+pyuic5 -o dialogs\OTsUI_main.py dialogs\OTsUI_main.ui

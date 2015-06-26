@@ -1,7 +1,9 @@
 from dialogs.OTsUI_main import *
 from tools.guiUtils import *
-
-class OTsUI(OTsUI_main):
+from pyqtgraph import PlotWidget, AxisItem
+from PyQt5.Qt import QStyle
+#from PyQt5.Qt import Alignement
+class OTsUI(Ui_OTsUI_main):
     
     def setupUi(self,MainWindow):
         super(OTsUI, self).setupUi(MainWindow)
@@ -42,3 +44,38 @@ class OTsUI(OTsUI_main):
         self.ySpeedTrapPadNumDbl.valueChanged.connect(self.ySpeedTrapPadSlider.setValue)
         
         ######################################
+        
+        self.sig1Plot = PlotWidget(self.signalTab,background='w')
+        self.sig1Plot.setObjectName("sig1Plot")
+        self.signalTabGrid.addWidget(self.sig1Plot, 0, 0, 1, 6)
+        
+        self.sig2Plot = PlotWidget(self.signalTab,background='w')
+        self.sig2Plot.setObjectName("sig2Plot")
+        self.signalTabGrid.addWidget(self.sig2Plot, 2, 0, 1, 3)
+        
+        self.sig3Plot = PlotWidget(self.signalTab,background='w')
+        self.sig3Plot.setObjectName("sig3Plot")
+        self.signalTabGrid.addWidget(self.sig3Plot, 2, 3, 1, 3)
+        
+        self.powSpec1Plot = PlotWidget(self.signalTab,background='w')
+        self.powSpec1Plot.setObjectName("powSpec1Plot")
+        self.psTabGrid.addWidget(self.powSpec1Plot, 0, 0, 1, 6)
+        
+        self.powSpec2Plot = PlotWidget(self.signalTab,background='w')
+        self.powSpec2Plot.setObjectName("powSpec2Plot")
+        self.psTabGrid.addWidget(self.powSpec2Plot, 2, 0, 1, 3)
+        
+        self.powSpec3Plot = PlotWidget(self.signalTab,background='w')
+        self.powSpec3Plot.setObjectName("powSpec3Plot")
+        self.psTabGrid.addWidget(self.powSpec3Plot, 2, 3, 1, 3)
+        
+        self.trapPadPlot = PlotWidget(self.signalTab,background='w')
+        #self.trapPadPlot.plotItem.hideAxis('left')
+        #self.trapPadPlot.plotItem.hideAxis('bottom')
+        self.trapPadPlot.plotItem.showAxis('top', show=True)
+        self.trapPadPlot.plotItem.showAxis('right', show=True)
+        self.trapPadPlot.plotItem.showGrid(True, True, 1)
+        self.trapPadPlot.setMaximumSize(QtCore.QSize(180, 180))
+        self.trapPadPlot.setObjectName("trapPadPlot")
+        self.padVert.replaceWidget(self.trpPadPlot,self.trapPadPlot)
+        
