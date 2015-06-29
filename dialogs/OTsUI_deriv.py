@@ -2,7 +2,13 @@ from dialogs.OTsUI_main import *
 from tools.guiUtils import *
 from pyqtgraph import PlotWidget, AxisItem
 from PyQt5.Qt import QStyle
-#from PyQt5.Qt import Alignement
+import configparser as cfg
+from bcolz.py2help import xrange
+
+cfgParse = cfg.ConfigParser()
+f = open('dialogs\\config.ini', 'r')
+cfgParse.read_file(f)
+
 class OTsUI(Ui_OTsUI_main):
     
     def setupUi(self,MainWindow):
@@ -45,31 +51,33 @@ class OTsUI(Ui_OTsUI_main):
         
         ######################################
         
-        self.sig1Plot = PlotWidget(self.signalTab,background='w')
+        # Plot items
+        
+        self.sig1Plot = PlotWidget(self.signalPage,background='w')
         self.sig1Plot.setObjectName("sig1Plot")
         self.signalTabGrid.addWidget(self.sig1Plot, 0, 0, 1, 6)
         
-        self.sig2Plot = PlotWidget(self.signalTab,background='w')
+        self.sig2Plot = PlotWidget(self.signalPage,background='w')
         self.sig2Plot.setObjectName("sig2Plot")
         self.signalTabGrid.addWidget(self.sig2Plot, 2, 0, 1, 3)
         
-        self.sig3Plot = PlotWidget(self.signalTab,background='w')
+        self.sig3Plot = PlotWidget(self.signalPage,background='w')
         self.sig3Plot.setObjectName("sig3Plot")
         self.signalTabGrid.addWidget(self.sig3Plot, 2, 3, 1, 3)
         
-        self.powSpec1Plot = PlotWidget(self.signalTab,background='w')
+        self.powSpec1Plot = PlotWidget(self.signalPage,background='w')
         self.powSpec1Plot.setObjectName("powSpec1Plot")
         self.psTabGrid.addWidget(self.powSpec1Plot, 0, 0, 1, 6)
         
-        self.powSpec2Plot = PlotWidget(self.signalTab,background='w')
+        self.powSpec2Plot = PlotWidget(self.signalPage,background='w')
         self.powSpec2Plot.setObjectName("powSpec2Plot")
         self.psTabGrid.addWidget(self.powSpec2Plot, 2, 0, 1, 3)
         
-        self.powSpec3Plot = PlotWidget(self.signalTab,background='w')
+        self.powSpec3Plot = PlotWidget(self.signalPage,background='w')
         self.powSpec3Plot.setObjectName("powSpec3Plot")
         self.psTabGrid.addWidget(self.powSpec3Plot, 2, 3, 1, 3)
         
-        self.trapPadPlot = PlotWidget(self.signalTab,background='w')
+        self.trapPadPlot = PlotWidget(self.signalPage,background='w')
         #self.trapPadPlot.plotItem.hideAxis('left')
         #self.trapPadPlot.plotItem.hideAxis('bottom')
         self.trapPadPlot.plotItem.showAxis('top', show=True)
@@ -79,3 +87,175 @@ class OTsUI(Ui_OTsUI_main):
         self.trapPadPlot.setObjectName("trapPadPlot")
         self.padVert.replaceWidget(self.trpPadPlot,self.trapPadPlot)
         
+        #######################################################################
+        
+        # Set num controls
+        
+        ctrls = ['xyPNumDbl',
+                 'xyINumDbl',
+                'zPNumDbl',
+                'zINumDbl',
+                'xSpeedTrapPadNumDbl',
+                'ySpeedTrapPadNumDbl',
+                'xOffSetNumDbl',
+                'yOffSetNumDbl',
+                'zOffSetNumDbl',
+                'passiveCalDurNumDbl',
+                'passiveCalMaxFreqNumDbl',
+                'passiveCalAvgNum',
+                'activeCalXAmplNumDbl',
+                'activeCalYAmplNumDbl',
+                'activeCalZAmplNumDbl',
+                'activeCalXFreqNumDbl',
+                'activeCalYFreqNumDbl',
+                'activeCalZFreqNumDbl',
+                'activeCalDurNumDbl',
+                'activeCalMaxFreqNumDbl',
+                'activeCalAvgNum',
+                'radiusNumDbl',
+                'dynViscNumDbl',
+                'kxNumDbl',
+                'kyNumDbl',
+                'kzNumDbl',
+                'SxNumDbl',
+                'SyNumDbl',
+                'SzNumDbl',
+                'stdExpXSetPntNumDbl',
+                'stdExpYSetPntNumDbl',
+                'stdExpZSetPntNumDbl',
+                'stdExpDurNumDbl',
+                'fbSchedNumIntNum',
+                'fbSchedOnDurNumDbl',
+                'fbSchedOffDurNumDbl',
+                'customExpXNumIntNum',
+                'customExpXOnDurNumDbl',
+                'customExpXOffDurNumDbl',
+                'customExpXAmplNumDbl',
+                'customExpXFreqNumDbl',
+                'customExpYNumIntNum',
+                'customExpYOnDurNumDbl',
+                'customExpYOffDurNumDbl',
+                'customExpYAmplNumDbl',
+                'customExpYFreqNumDbl',
+                'customExpZNumIntNum',
+                'customExpZOnDurNumDbl',
+                'customExpZOffDurNumDbl',
+                'customExpZAmplNumDbl',
+                'customExpZFreqNumDbl']
+        
+        cfgCtrls = ['XYP',
+                   'XYI',
+                   'ZI',
+                   'ZP',
+                   'XSPEED',
+                   'YSPEED',
+                   'XO',
+                   'YO',
+                   'ZO',
+                   'DUR',
+                   'MAXFREQ',
+                   'AVG',
+                   'XAMPL',
+                   'YAMPL',
+                   'ZAMPL',
+                   'XFREQ',
+                   'YFREQ',
+                   'ZFREQ',
+                   'DUR',
+                   'MAXFREQ',
+                   'AVG',
+                   'RADIUS',
+                   'DYNVISC',
+                   'KX',
+                   'KY',
+                   'KZ',
+                   'SX',
+                   'SY',
+                   'SZ',
+                   'XSP',
+                   'YSP',
+                   'ZSP',
+                   'DUR',
+                   'INTNUM',
+                   'ONDUR',
+                   'OFFDUR',
+                   'XINTNUM',
+                   'XONDUR',
+                   'XOFFDUR',
+                   'XAMPL',
+                   'XFREQ',
+                   'YINTNUM',
+                   'YONDUR',
+                   'YOFFDUR',
+                   'YAMPL',
+                   'YFREQ',
+                   'ZINTNUM',
+                   'ZONDUR',
+                   'ZOFFDUR',
+                   'ZAMPL',
+                   'ZFREQ']
+        
+        cfgKeys = ['PI',
+                   'PI',
+                   'PI',
+                   'PI',
+                   'PAD',
+                   'PAD',
+                   'OFFSET',
+                   'OFFSET',
+                   'OFFSET',
+                   'PASSIVECALIB',
+                   'PASSIVECALIB',
+                   'PASSIVECALIB',
+                   'ACTIVECALIB',
+                   'ACTIVECALIB',
+                   'ACTIVECALIB',
+                   'ACTIVECALIB',
+                   'ACTIVECALIB',
+                   'ACTIVECALIB',
+                   'ACTIVECALIB',
+                   'ACTIVECALIB',
+                   'ACTIVECALIB',
+                   'GENPAR',
+                   'GENPAR',
+                   'CALRESULTS',
+                   'CALRESULTS',
+                   'CALRESULTS',
+                   'CALRESULTS',
+                   'CALRESULTS',
+                   'CALRESULTS',
+                   'STDEXP',
+                   'STDEXP',
+                   'STDEXP',
+                   'STDEXP',
+                   'FBSCHED',
+                   'FBSCHED',
+                   'FBSCHED',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP',
+                   'CUSTEXP']
+        
+        for i in xrange(len(ctrls)):
+            self.configNum(ctrls[i], cfgCtrls[i], cfgKeys[i])
+        
+        
+    def configNum(self,numName,cfgName,cfgKey):
+        
+        getattr(self, numName).setMaximum(float(cfgParse[cfgKey][cfgName+'MAX']))
+        getattr(self, numName).setMinimum(float(cfgParse[cfgKey][cfgName+'MIN']))
+        getattr(self, numName).setSingleStep(float(cfgParse[cfgKey][cfgName+'INCR']))
+        getattr(self, numName).setValue(float(cfgParse[cfgKey][cfgName]))
+        
+    
