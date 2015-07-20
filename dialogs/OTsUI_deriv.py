@@ -1,13 +1,21 @@
 from dialogs.OTsUI_main import *
 from tools.guiUtils import *
-from pyqtgraph import PlotWidget, AxisItem
-from PyQt5.Qt import QStyle
+from pyqtgraph import PlotWidget, AxisItem, setConfigOption
+from PyQt5.Qt import QStyle, QFileDialog
+import PyQt5
 import configparser as cfg
 from bcolz.py2help import xrange
+import numpy as np
+from os import sep
+
+setConfigOption('background', 'w')
+setConfigOption('foreground', (120,120,120))
 
 cfgParse = cfg.ConfigParser()
 f = open('dialogs\\config.ini', 'r')
 cfgParse.read_file(f)
+
+
 
 class OTsUI(Ui_OTsUI_main):
     
@@ -19,87 +27,81 @@ class OTsUI(Ui_OTsUI_main):
         self.sx = -1
         self.sy = -1
         self.sz = -1
+        self.logDir = ''
+        self.dataDir = ''
+        self.parDir = ''
+        self.paramSaveParser = cfg.ConfigParser()
+        self.paramLoadParser = cfg.ConfigParser()
         
-        # Setting up the interconnection between UI controls
         
-        self.zPNumDbl.valueChanged.connect(self.zPDial.setValue)
-        self.zPDial.valueChanged.connect(self.zPNumDbl.setValue)
+        # Setting up the interconnection between UI numeric controls
         
-        self.zINumDbl.valueChanged.connect(self.zIDial.setValue)
-        self.zIDial.valueChanged.connect(self.zINumDbl.setValue)
+        self.zPNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.zPDial))
+        self.zPDial.valueChanged.connect(lambda: self.setScaledValue(self.zPNumDbl))
         
-        self.xyPNumDbl.valueChanged.connect(self.xyPDial.setValue)
-        self.xyPDial.valueChanged.connect(self.xyPNumDbl.setValue)
+        self.zINumDbl.valueChanged.connect(lambda: self.setScaledValue(self.zIDial))
+        self.zIDial.valueChanged.connect(lambda: self.setScaledValue(self.zINumDbl))
         
-        self.xyINumDbl.valueChanged.connect(self.xyIDial.setValue)
-        self.xyIDial.valueChanged.connect(self.xyINumDbl.setValue)
+        self.xyPNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.xyPDial))
+        self.xyPDial.valueChanged.connect(lambda: self.setScaledValue(self.xyPNumDbl))
         
-        self.zOffSetNumDbl.valueChanged.connect(self.zOffSetDial.setValue)
-        self.zOffSetDial.valueChanged.connect(self.zOffSetNumDbl.setValue)
+        self.xyINumDbl.valueChanged.connect(lambda: self.setScaledValue(self.xyIDial))
+        self.xyIDial.valueChanged.connect(lambda: self.setScaledValue(self.xyINumDbl))
         
-        self.xOffSetNumDbl.valueChanged.connect(self.xOffSetDial.setValue)
-        self.xOffSetDial.valueChanged.connect(self.xOffSetNumDbl.setValue)
+        self.zOffSetNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.zOffSetDial))
+        self.zOffSetDial.valueChanged.connect(lambda: self.setScaledValue(self.zOffSetNumDbl))
         
-        self.yOffSetNumDbl.valueChanged.connect(self.yOffSetDial.setValue)
-        self.yOffSetDial.valueChanged.connect(self.yOffSetNumDbl.setValue)
+        self.xOffSetNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.xOffSetDial))
+        self.xOffSetDial.valueChanged.connect(lambda: self.setScaledValue(self.xOffSetNumDbl))
         
-        self.xSpeedTrapPadSlider.valueChanged.connect(self.xSpeedTrapPadNumDbl.setValue)
-        self.xSpeedTrapPadNumDbl.valueChanged.connect(self.xSpeedTrapPadSlider.setValue)
+        self.yOffSetNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.yOffSetDial))
+        self.yOffSetDial.valueChanged.connect(lambda: self.setScaledValue(self.yOffSetNumDbl))
         
-        self.ySpeedTrapPadSlider.valueChanged.connect(self.ySpeedTrapPadNumDbl.setValue)
-        self.ySpeedTrapPadNumDbl.valueChanged.connect(self.ySpeedTrapPadSlider.setValue)
+        self.xSpeedTrapPadSlider.valueChanged.connect(lambda: self.setScaledValue(self.xSpeedTrapPadNumDbl))
+        self.xSpeedTrapPadNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.xSpeedTrapPadSlider))
+        
+        self.ySpeedTrapPadSlider.valueChanged.connect(lambda: self.setScaledValue(self.ySpeedTrapPadNumDbl))
+        self.ySpeedTrapPadNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.ySpeedTrapPadSlider))
         
         ######################################
         
         # Plot items
         
-        self.sig1Plot = PlotWidget(self.signalPage,background='w')
-        self.sig1Plot.setObjectName("sig1Plot")
-        self.signalTabGrid.addWidget(self.sig1Plot, 0, 0, 1, 6)
-        
-        self.sig2Plot = PlotWidget(self.signalPage,background='w')
-        self.sig2Plot.setObjectName("sig2Plot")
-        self.signalTabGrid.addWidget(self.sig2Plot, 2, 0, 1, 3)
-        
-        self.sig3Plot = PlotWidget(self.signalPage,background='w')
-        self.sig3Plot.setObjectName("sig3Plot")
-        self.signalTabGrid.addWidget(self.sig3Plot, 2, 3, 1, 3)
-        
-        self.powSpec1Plot = PlotWidget(self.signalPage,background='w')
-        self.powSpec1Plot.setObjectName("powSpec1Plot")
-        self.psTabGrid.addWidget(self.powSpec1Plot, 0, 0, 1, 6)
-        
-        self.powSpec2Plot = PlotWidget(self.signalPage,background='w')
-        self.powSpec2Plot.setObjectName("powSpec2Plot")
-        self.psTabGrid.addWidget(self.powSpec2Plot, 2, 0, 1, 3)
-        
-        self.powSpec3Plot = PlotWidget(self.signalPage,background='w')
-        self.powSpec3Plot.setObjectName("powSpec3Plot")
-        self.psTabGrid.addWidget(self.powSpec3Plot, 2, 3, 1, 3)
-        
-        self.trapPadPlot = PlotWidget(self.signalPage,background='w')
-        #self.trapPadPlot.plotItem.hideAxis('left')
-        #self.trapPadPlot.plotItem.hideAxis('bottom')
         self.trapPadPlot.plotItem.showAxis('top', show=True)
         self.trapPadPlot.plotItem.showAxis('right', show=True)
         self.trapPadPlot.plotItem.showGrid(True, True, 1)
         self.trapPadPlot.setMaximumSize(QtCore.QSize(180, 180))
-        self.trapPadPlot.setObjectName("trapPadPlot")
-        self.padVert.replaceWidget(self.trpPadPlot,self.trapPadPlot)
+        
+        self.trapPosXYPlot.plotItem.showAxis('top', show=True)
+        self.trapPosXYPlot.plotItem.showAxis('right', show=True)
+        self.trapPosXYPlot.plotItem.showGrid(True, True, 1)
+        self.trapPosXYPlot.setEnabled(True)
+        
+        self.trapPosZPlot.plotItem.hideAxis('left')
+        self.trapPosZPlot.plotItem.showAxis('right', show=True)
         
         #######################################################################
         
         # Set num controls
         
         ctrls = ['xyPNumDbl',
-                 'xyINumDbl',
+                'xyINumDbl',
+                'xyPDial',
+                'xyIDial',
                 'zPNumDbl',
                 'zINumDbl',
+                'zPDial',
+                'zIDial',
                 'xSpeedTrapPadNumDbl',
                 'ySpeedTrapPadNumDbl',
+                'xSpeedTrapPadSlider',
+                'ySpeedTrapPadSlider',
                 'xOffSetNumDbl',
                 'yOffSetNumDbl',
                 'zOffSetNumDbl',
+                'xOffSetDial',
+                'yOffSetDial',
+                'zOffSetDial',
                 'passiveCalDurNumDbl',
                 'passiveCalMaxFreqNumDbl',
                 'passiveCalAvgNum',
@@ -145,10 +147,19 @@ class OTsUI(Ui_OTsUI_main):
         
         cfgCtrls = ['XYP',
                    'XYI',
+                   'XYP',
+                   'XYI',
+                   'ZI',
+                   'ZP',
                    'ZI',
                    'ZP',
                    'XSPEED',
                    'YSPEED',
+                   'XSPEED',
+                   'YSPEED',
+                   'XO',
+                   'YO',
+                   'ZO',
                    'XO',
                    'YO',
                    'ZO',
@@ -199,8 +210,17 @@ class OTsUI(Ui_OTsUI_main):
                    'PI',
                    'PI',
                    'PI',
+                   'PI',
+                   'PI',
+                   'PI',
+                   'PI',
                    'PAD',
                    'PAD',
+                   'PAD',
+                   'PAD',
+                   'OFFSET',
+                   'OFFSET',
+                   'OFFSET',
                    'OFFSET',
                    'OFFSET',
                    'OFFSET',
@@ -249,13 +269,93 @@ class OTsUI(Ui_OTsUI_main):
         
         for i in xrange(len(ctrls)):
             self.configNum(ctrls[i], cfgCtrls[i], cfgKeys[i])
+            
+        #################################################################################
         
+        # Setting Plot combo boxes
+        
+        self.sig1selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
+        self.sig2selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
+        self.sig3selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
+        
+        self.ps1selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
+        self.ps2selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
+        self.ps3selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
+        
+        #################################################################################
+        
+        # Set directories selection
+        
+        self.logDirBtn.clicked.connect(lambda: self.selectDir(self.logDirLine))
+        self.parDirBtn.clicked.connect(lambda: self.selectDir(self.parDirLine))
+        self.dataDirBtn.clicked.connect(lambda: self.selectDir(self.dataDirLine))
+        self.logDirLine.textChanged.connect(lambda: self.updateDirObj(self.logDir))
+        self.parDirLine.textChanged.connect(lambda: self.updateDirObj(self.parDir))
+        self.dataDirLine.textChanged.connect(lambda: self.updateDirObj(self.dataDir))
+        
+        #################################################################################
+        
+        attribList = dir(self)
+        self.attribDict = {PyQt5.QtWidgets.QComboBox:[],PyQt5.QtWidgets.QSpinBox:[],PyQt5.QtWidgets.QDoubleSpinBox:[],PyQt5.QtWidgets.QLineEdit:[],
+                      PyQt5.QtWidgets.QCheckBox:[],PyQt5.QtWidgets.QDial:[],PyQt5.QtWidgets.QSlider:[]}
+        
+        for a in attribList:
+            try:
+                aObj = getattr(self,a)
+                self.attribDict[type(aObj)].append(aObj)
+            except:
+                pass
+            
+        for c in self.attribDict[eval('PyQt5.QtWidgets.QCheckBox')]:
+            print(c.objectName())
         
     def configNum(self,numName,cfgName,cfgKey):
         
-        getattr(self, numName).setMaximum(float(cfgParse[cfgKey][cfgName+'MAX']))
-        getattr(self, numName).setMinimum(float(cfgParse[cfgKey][cfgName+'MIN']))
-        getattr(self, numName).setSingleStep(float(cfgParse[cfgKey][cfgName+'INCR']))
-        getattr(self, numName).setValue(float(cfgParse[cfgKey][cfgName]))
+        culprit = getattr(self, numName)
+        scale = (1/float(cfgParse[cfgKey][cfgName+'INCR'])) if (type(culprit) == PyQt5.QtWidgets.QDial or type(culprit) == PyQt5.QtWidgets.QSlider) else 1
+        getattr(self, numName).setMaximum(float(cfgParse[cfgKey][cfgName+'MAX'])*scale)
+        getattr(self, numName).setMinimum(float(cfgParse[cfgKey][cfgName+'MIN'])*scale)
+        getattr(self, numName).setSingleStep(float(cfgParse[cfgKey][cfgName+'INCR'])*scale)
+        getattr(self, numName).setValue(float(cfgParse[cfgKey][cfgName])*scale)
+        
+    
+    def changeCmbGrMem(self):
+        sendCmb = self.sender()
+        fatherCmb = sendCmb.parentWidget()
+        listCmbChild = [c for c in fatherCmb.children() if (type(c)==PyQt5.QtWidgets.QComboBox and c is not sendCmb)]
+        equalValCmb = [l for l in listCmbChild if l.currentIndex()==sendCmb.currentIndex()][0]
+        elements = list(range(sendCmb.count()))
+        elements.remove(sendCmb.currentIndex())
+        listOtherChild = [c for c in listCmbChild if  c is not equalValCmb]
+        for c in listOtherChild:
+            elements.remove(c.currentIndex())
+        equalValCmb.blockSignals(True)
+        equalValCmb.setCurrentIndex(elements[0])
+        equalValCmb.blockSignals(False)
+        
+    
+    def setScaledValue(self,rec):
+        culprit = self.sender()
+        scale = rec.singleStep() if (type(culprit) == PyQt5.QtWidgets.QDial or type(culprit) == PyQt5.QtWidgets.QSlider) else 1/culprit.singleStep()
+        rec.blockSignals(True)
+        rec.setValue(culprit.value()*scale)
+        rec.blockSignals(False)
+        
+        
+    def selectDir(self,displayLine):
+        
+        displayLine.setText(str(QFileDialog.getExistingDirectory(self, "Select Directory")))
+        
+    
+    def updateDirObj(self,dir):
+        
+        culprit = self.sender()
+        dir = culprit.text()
+        dir=dir.replace('/',sep)
+        
+    
+    def saveParams(self):
+        for k in self.attribDict.keys():
+            self.paramSaveParser.add_section(str(k))
         
     

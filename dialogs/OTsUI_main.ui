@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1114</width>
+    <width>1137</width>
     <height>848</height>
    </rect>
   </property>
@@ -113,10 +113,17 @@
            <enum>QLayout::SetMaximumSize</enum>
           </property>
           <item>
-           <layout class="QGridLayout" name="saveGrid" columnstretch="1,1">
+           <layout class="QGridLayout" name="saveGrid" columnstretch="1,0">
             <property name="sizeConstraint">
              <enum>QLayout::SetMaximumSize</enum>
             </property>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="dataDirBtn">
+              <property name="text">
+               <string>Browse...</string>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="0">
              <widget class="QLabel" name="dataDirLab">
               <property name="text">
@@ -127,78 +134,81 @@
             <item row="0" column="1">
              <widget class="QLineEdit" name="dataDirLine"/>
             </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="dataDirBtn">
-              <property name="text">
-               <string>Browse...</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="logDirLab">
-              <property name="text">
-               <string>Log directory</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLineEdit" name="logDirLine"/>
-            </item>
-            <item row="3" column="1">
+            <item row="4" column="1">
              <widget class="QPushButton" name="logDirBtn">
               <property name="text">
                <string>Browse</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
+            <item row="5" column="0">
              <widget class="QLabel" name="logNameLab">
               <property name="text">
                <string>Log file name</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
+            <item row="3" column="0">
+             <widget class="QLabel" name="logDirLab">
+              <property name="text">
+               <string>Log directory</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLineEdit" name="logDirLine"/>
+            </item>
+            <item row="5" column="1">
              <widget class="QLineEdit" name="logNameLine"/>
             </item>
-            <item row="5" column="0">
+            <item row="6" column="1">
+             <widget class="QLineEdit" name="parDirLine"/>
+            </item>
+            <item row="6" column="0">
              <widget class="QLabel" name="parDirLab">
               <property name="text">
                <string>Param.s directory</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
-             <widget class="QLineEdit" name="parDirLine"/>
-            </item>
-            <item row="6" column="1">
+            <item row="7" column="1">
              <widget class="QPushButton" name="parDirBtn">
               <property name="text">
                <string>Browse</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="0">
+            <item row="8" column="0">
              <widget class="QLabel" name="parNameLab">
               <property name="text">
                <string>Param.s file name</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="1">
+            <item row="9" column="1">
+             <widget class="QPushButton" name="parLoadBtn">
+              <property name="text">
+               <string>Load Param.s</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
              <widget class="QLineEdit" name="parNameLine"/>
             </item>
-            <item row="8" column="0">
+            <item row="9" column="0">
              <widget class="QPushButton" name="parSaveBtn">
               <property name="text">
                <string>Save Param.s</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="1">
-             <widget class="QPushButton" name="parLoadBtn">
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="dataNameLine"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="dataNameLab">
               <property name="text">
-               <string>Load Param.s</string>
+               <string>Experiment name</string>
               </property>
              </widget>
             </item>
@@ -240,7 +250,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="sysCtrlVert" stretch="7,4">
+     <layout class="QVBoxLayout" name="sysCtrlVert" stretch="7,0">
       <item>
        <layout class="QHBoxLayout" name="plotNfbHor" stretch="0,2">
         <item>
@@ -253,27 +263,8 @@
             <string>Signals</string>
            </attribute>
            <layout class="QGridLayout" name="signalTabGrid" rowstretch="3,1,2,1">
-            <item row="3" column="3">
-             <widget class="QComboBox" name="sig3selCmb">
-              <property name="currentIndex">
-               <number>2</number>
-              </property>
-              <item>
-               <property name="text">
-                <string>X</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Y</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Z</string>
-               </property>
-              </item>
-             </widget>
+            <item row="2" column="0">
+             <widget class="PlotWidget" name="sig2Plot"/>
             </item>
             <item row="3" column="0">
              <widget class="QComboBox" name="sig2selCmb">
@@ -297,58 +288,35 @@
               </item>
              </widget>
             </item>
-            <item row="1" column="3">
-             <widget class="QPushButton" name="scaleSig1Btn">
-              <property name="text">
-               <string>SCALE</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="4">
-             <widget class="QCheckBox" name="autoScaleSig1Check">
-              <property name="text">
-               <string>Auto scale</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="4">
-             <widget class="QPushButton" name="scaleSig3Btn">
-              <property name="text">
-               <string>SCALE</string>
-              </property>
-             </widget>
+            <item row="2" column="1">
+             <widget class="PlotWidget" name="sig3Plot"/>
             </item>
             <item row="3" column="1">
-             <widget class="QPushButton" name="scaleSig2Btn">
-              <property name="text">
-               <string>SCALE</string>
+             <widget class="QComboBox" name="sig3selCmb">
+              <property name="currentIndex">
+               <number>2</number>
               </property>
+              <item>
+               <property name="text">
+                <string>X</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Y</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Z</string>
+               </property>
+              </item>
              </widget>
             </item>
-            <item row="3" column="2">
-             <widget class="QCheckBox" name="autoScaleSig2Check">
-              <property name="text">
-               <string>Auto scale</string>
-              </property>
-             </widget>
+            <item row="0" column="0" colspan="2">
+             <widget class="PlotWidget" name="sig1Plot"/>
             </item>
-            <item row="3" column="5">
-             <widget class="QCheckBox" name="autScaleSig3Check">
-              <property name="text">
-               <string>Auto scale</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0" colspan="6">
-             <widget class="QGraphicsView" name="sig1Plot"/>
-            </item>
-            <item row="2" column="0" colspan="3">
-             <widget class="QGraphicsView" name="sig2Plot"/>
-            </item>
-            <item row="2" column="3" colspan="3">
-             <widget class="QGraphicsView" name="sig3Plot"/>
-            </item>
-            <item row="1" column="0" colspan="3">
+            <item row="1" column="0" colspan="2">
              <widget class="QComboBox" name="sig1selCmb">
               <property name="layoutDirection">
                <enum>Qt::LeftToRight</enum>
@@ -373,17 +341,13 @@
            </layout>
           </widget>
           <widget class="QWidget" name="psPage">
+           <property name="cursor">
+            <cursorShape>WaitCursor</cursorShape>
+           </property>
            <attribute name="title">
             <string>Power spectrums</string>
            </attribute>
-           <layout class="QGridLayout" name="psTabGrid" rowstretch="3,1,2,1">
-            <item row="3" column="2">
-             <widget class="QCheckBox" name="autoScalePs2Check">
-              <property name="text">
-               <string>Auto scale</string>
-              </property>
-             </widget>
-            </item>
+           <layout class="QGridLayout" name="gridLayout" rowstretch="3,1,2,1">
             <item row="3" column="0">
              <widget class="QComboBox" name="ps2selCmb">
               <property name="currentIndex">
@@ -406,21 +370,13 @@
               </item>
              </widget>
             </item>
-            <item row="3" column="4">
-             <widget class="QPushButton" name="scalePs3Btn">
-              <property name="text">
-               <string>SCALE</string>
-              </property>
-             </widget>
+            <item row="2" column="0">
+             <widget class="PlotWidget" name="powSpec2Plot"/>
             </item>
-            <item row="1" column="3">
-             <widget class="QPushButton" name="scalePs1Btn">
-              <property name="text">
-               <string>SCALE</string>
-              </property>
-             </widget>
+            <item row="2" column="1">
+             <widget class="PlotWidget" name="powSpec3Plot"/>
             </item>
-            <item row="3" column="3">
+            <item row="3" column="1">
              <widget class="QComboBox" name="ps3selCmb">
               <property name="currentIndex">
                <number>2</number>
@@ -442,37 +398,10 @@
               </item>
              </widget>
             </item>
-            <item row="1" column="4">
-             <widget class="QCheckBox" name="autoScalePs1Check">
-              <property name="text">
-               <string>Auto scale</string>
-              </property>
-             </widget>
+            <item row="0" column="0" colspan="2">
+             <widget class="PlotWidget" name="powSpec1Plot"/>
             </item>
-            <item row="3" column="1">
-             <widget class="QPushButton" name="scalePs2Btn">
-              <property name="text">
-               <string>SCALE</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="5">
-             <widget class="QCheckBox" name="autoScalePs3Check">
-              <property name="text">
-               <string>Auto scale</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0" colspan="6">
-             <widget class="QGraphicsView" name="powSpec1Plot"/>
-            </item>
-            <item row="2" column="0" colspan="3">
-             <widget class="QGraphicsView" name="powSpec2Plot"/>
-            </item>
-            <item row="2" column="3" colspan="3">
-             <widget class="QGraphicsView" name="powSpec3Plot"/>
-            </item>
-            <item row="1" column="0" colspan="3">
+            <item row="1" column="0" colspan="2">
              <widget class="QComboBox" name="ps1selCmb">
               <property name="layoutDirection">
                <enum>Qt::LeftToRight</enum>
@@ -537,7 +466,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="piPage">
               <property name="geometry">
@@ -545,19 +474,65 @@
                 <x>0</x>
                 <y>0</y>
                 <width>180</width>
-                <height>394</height>
+                <height>396</height>
                </rect>
               </property>
               <attribute name="label">
                <string>PI controller parameters</string>
               </attribute>
               <layout class="QGridLayout" name="piGrid" columnstretch="1,0,0">
+               <item row="3" column="2">
+                <widget class="QDoubleSpinBox" name="xyINumDbl"/>
+               </item>
+               <item row="4" column="0" colspan="3">
+                <widget class="Line" name="line_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="zLab">
+                 <property name="text">
+                  <string>Z</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QDoubleSpinBox" name="xyPNumDbl"/>
+               </item>
+               <item row="7" column="1">
+                <widget class="QDial" name="zIDial"/>
+               </item>
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="xyFbOnCheck">
+                 <property name="text">
+                  <string>FB ON</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0" colspan="3">
+                <widget class="QPushButton" name="setFbBtn">
+                 <property name="text">
+                  <string>SET PI PARAMETERS</string>
+                 </property>
+                </widget>
+               </item>
                <item row="6" column="0">
                 <widget class="QLabel" name="zPLab">
                  <property name="text">
                   <string>P</string>
                  </property>
                 </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QDial" name="xyIDial"/>
+               </item>
+               <item row="6" column="1">
+                <widget class="QDial" name="zPDial"/>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDial" name="xyPDial"/>
                </item>
                <item row="7" column="0">
                 <widget class="QLabel" name="zILab">
@@ -569,14 +544,12 @@
                <item row="6" column="2">
                 <widget class="QDoubleSpinBox" name="zPNumDbl"/>
                </item>
-               <item row="6" column="1">
-                <widget class="QDial" name="zPDial"/>
-               </item>
-               <item row="3" column="1">
-                <widget class="QDial" name="xyIDial"/>
-               </item>
-               <item row="1" column="1">
-                <widget class="QDial" name="xyPDial"/>
+               <item row="0" column="0">
+                <widget class="QLabel" name="xyLab">
+                 <property name="text">
+                  <string>X-Y</string>
+                 </property>
+                </widget>
                </item>
                <item row="3" column="0">
                 <widget class="QLabel" name="xyILab">
@@ -585,9 +558,6 @@
                  </property>
                 </widget>
                </item>
-               <item row="7" column="2">
-                <widget class="QDoubleSpinBox" name="zINumDbl"/>
-               </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="xyPLab">
                  <property name="text">
@@ -595,49 +565,8 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="xyLab">
-                 <property name="text">
-                  <string>X-Y</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="2">
-                <widget class="QDoubleSpinBox" name="xyPNumDbl"/>
-               </item>
-               <item row="7" column="1">
-                <widget class="QDial" name="zIDial"/>
-               </item>
-               <item row="3" column="2">
-                <widget class="QDoubleSpinBox" name="xyINumDbl"/>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="zLab">
-                 <property name="text">
-                  <string>Z</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0" colspan="3">
-                <widget class="Line" name="line_2">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="8" column="0" colspan="3">
-                <widget class="QPushButton" name="setFbBtn">
-                 <property name="text">
-                  <string>SET PI PARAMETERS</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QCheckBox" name="xyFbOnCheck">
-                 <property name="text">
-                  <string>FB ON</string>
-                 </property>
-                </widget>
+               <item row="7" column="2">
+                <widget class="QDoubleSpinBox" name="zINumDbl"/>
                </item>
                <item row="5" column="1">
                 <widget class="QCheckBox" name="zFbOnCheck">
@@ -654,7 +583,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>180</width>
-                <height>394</height>
+                <height>396</height>
                </rect>
               </property>
               <attribute name="label">
@@ -662,7 +591,7 @@
               </attribute>
               <layout class="QVBoxLayout" name="padVert" stretch="2,2">
                <item>
-                <widget class="QGraphicsView" name="trpPadPlot">
+                <widget class="PlotWidget" name="trapPadPlot">
                  <property name="maximumSize">
                   <size>
                    <width>180</width>
@@ -769,7 +698,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>180</width>
-                <height>394</height>
+                <height>396</height>
                </rect>
               </property>
               <attribute name="label">
@@ -827,7 +756,7 @@
       <item>
        <layout class="QHBoxLayout" name="posNmodHor" stretch="0,1,15">
         <item>
-         <widget class="QGraphicsView" name="trapPosXYPlot">
+         <widget class="PlotWidget" name="trapPosXYPlot">
           <property name="enabled">
            <bool>true</bool>
           </property>
@@ -858,7 +787,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QGraphicsView" name="trapPosZPlot">
+         <widget class="PlotWidget" name="trapPosZPlot">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -894,7 +823,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="calibPage">
            <attribute name="title">
@@ -904,9 +833,9 @@
             <item>
              <widget class="QTabWidget" name="calTypeTab">
               <property name="currentIndex">
-               <number>0</number>
+               <number>1</number>
               </property>
-              <widget class="QWidget" name="calPassivePage" native="true">
+              <widget class="QWidget" name="calPassivePage">
                <attribute name="title">
                 <string>Passive</string>
                </attribute>
@@ -979,7 +908,7 @@
                 </item>
                </layout>
               </widget>
-              <widget class="QWidget" name="calActivePage" native="true">
+              <widget class="QWidget" name="calActivePage">
                <attribute name="title">
                 <string>Active</string>
                </attribute>
@@ -995,9 +924,6 @@
                      <set>Qt::AlignCenter</set>
                     </property>
                    </widget>
-                  </item>
-                  <item row="1" column="3">
-                   <widget class="QSpinBox" name="activeCalZAmplNumDbl"/>
                   </item>
                   <item row="0" column="3">
                    <widget class="QLabel" name="activeCalZLab">
@@ -1016,12 +942,6 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="1">
-                   <widget class="QSpinBox" name="activeCalXAmplNumDbl"/>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QSpinBox" name="activeCalYAmplNumDbl"/>
-                  </item>
                   <item row="0" column="1">
                    <widget class="QLabel" name="activeCalXLab">
                     <property name="text">
@@ -1039,14 +959,23 @@
                     </property>
                    </widget>
                   </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="activeCalXAmplNumDbl"/>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QDoubleSpinBox" name="activeCalYAmplNumDbl"/>
+                  </item>
+                  <item row="1" column="3">
+                   <widget class="QDoubleSpinBox" name="activeCalZAmplNumDbl"/>
+                  </item>
                   <item row="2" column="1">
-                   <widget class="QSpinBox" name="activeCalXFreqNumDbl"/>
+                   <widget class="QDoubleSpinBox" name="activeCalXFreqNumDbl"/>
                   </item>
                   <item row="2" column="2">
-                   <widget class="QSpinBox" name="activeCalYFreqNumDbl"/>
+                   <widget class="QDoubleSpinBox" name="activeCalYFreqNumDbl"/>
                   </item>
                   <item row="2" column="3">
-                   <widget class="QSpinBox" name="activeCalZFreqNumDbl"/>
+                   <widget class="QDoubleSpinBox" name="activeCalZFreqNumDbl"/>
                   </item>
                  </layout>
                 </item>
@@ -1431,9 +1360,9 @@
             <item>
              <widget class="QTabWidget" name="customExpAxisTabs">
               <property name="currentIndex">
-               <number>2</number>
+               <number>0</number>
               </property>
-              <widget class="QWidget" name="customExpXPage" native="true">
+              <widget class="QWidget" name="customExpXPage">
                <attribute name="title">
                 <string>X</string>
                </attribute>
@@ -1583,7 +1512,7 @@
                 </item>
                </layout>
               </widget>
-              <widget class="QWidget" name="customExpYPage" native="true">
+              <widget class="QWidget" name="customExpYPage">
                <attribute name="title">
                 <string>Y</string>
                </attribute>
@@ -1733,7 +1662,7 @@
                 </item>
                </layout>
               </widget>
-              <widget class="QWidget" name="customExpZPage" native="true">
+              <widget class="QWidget" name="customExpZPage">
                <attribute name="title">
                 <string>Z</string>
                </attribute>
@@ -1907,7 +1836,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1114</width>
+     <width>1137</width>
      <height>21</height>
     </rect>
    </property>
@@ -1917,6 +1846,13 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">pyqtgraph</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
