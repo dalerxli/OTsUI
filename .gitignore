@@ -3,3 +3,6 @@ dialogs/attrname.txt
 dialogs/cfgnames.txt
 dialogs/cfgkeys.txt
 *.pyc
+*.xml
+.idea/.name
+*.iml

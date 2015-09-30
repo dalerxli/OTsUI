@@ -33,38 +33,6 @@ class OTsUI(Ui_OTsUI_main):
         self.paramSaveParser = cfg.ConfigParser()
         self.paramLoadParser = cfg.ConfigParser()
         
-        
-        # Setting up the interconnection between UI numeric controls
-        
-        self.zPNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.zPDial))
-        self.zPDial.valueChanged.connect(lambda: self.setScaledValue(self.zPNumDbl))
-        
-        self.zINumDbl.valueChanged.connect(lambda: self.setScaledValue(self.zIDial))
-        self.zIDial.valueChanged.connect(lambda: self.setScaledValue(self.zINumDbl))
-        
-        self.xyPNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.xyPDial))
-        self.xyPDial.valueChanged.connect(lambda: self.setScaledValue(self.xyPNumDbl))
-        
-        self.xyINumDbl.valueChanged.connect(lambda: self.setScaledValue(self.xyIDial))
-        self.xyIDial.valueChanged.connect(lambda: self.setScaledValue(self.xyINumDbl))
-        
-        self.zOffSetNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.zOffSetDial))
-        self.zOffSetDial.valueChanged.connect(lambda: self.setScaledValue(self.zOffSetNumDbl))
-        
-        self.xOffSetNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.xOffSetDial))
-        self.xOffSetDial.valueChanged.connect(lambda: self.setScaledValue(self.xOffSetNumDbl))
-        
-        self.yOffSetNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.yOffSetDial))
-        self.yOffSetDial.valueChanged.connect(lambda: self.setScaledValue(self.yOffSetNumDbl))
-        
-        self.xSpeedTrapPadSlider.valueChanged.connect(lambda: self.setScaledValue(self.xSpeedTrapPadNumDbl))
-        self.xSpeedTrapPadNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.xSpeedTrapPadSlider))
-        
-        self.ySpeedTrapPadSlider.valueChanged.connect(lambda: self.setScaledValue(self.ySpeedTrapPadNumDbl))
-        self.ySpeedTrapPadNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.ySpeedTrapPadSlider))
-        
-        ######################################
-        
         # Plot items
         
         self.trapPadPlot.plotItem.showAxis('top', show=True)
@@ -271,44 +239,28 @@ class OTsUI(Ui_OTsUI_main):
             self.configNum(ctrls[i], cfgCtrls[i], cfgKeys[i])
             
         #################################################################################
-        
-        # Setting Plot combo boxes
-        
-        self.sig1selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
-        self.sig2selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
-        self.sig3selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
-        
-        self.ps1selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
-        self.ps2selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
-        self.ps3selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
-        
-        #################################################################################
-        
-        # Set directories selection
-        
-        self.logDirBtn.clicked.connect(lambda: self.selectDir(self.logDirLine))
-        self.parDirBtn.clicked.connect(lambda: self.selectDir(self.parDirLine))
-        self.dataDirBtn.clicked.connect(lambda: self.selectDir(self.dataDirLine))
-        self.logDirLine.textChanged.connect(lambda: self.updateDirObj(self.logDir))
-        self.parDirLine.textChanged.connect(lambda: self.updateDirObj(self.parDir))
-        self.dataDirLine.textChanged.connect(lambda: self.updateDirObj(self.dataDir))
-        
-        #################################################################################
-        
-        attribList = dir(self)
-        self.attribDict = {PyQt5.QtWidgets.QComboBox:[],PyQt5.QtWidgets.QSpinBox:[],PyQt5.QtWidgets.QDoubleSpinBox:[],PyQt5.QtWidgets.QLineEdit:[],
-                      PyQt5.QtWidgets.QCheckBox:[],PyQt5.QtWidgets.QDial:[],PyQt5.QtWidgets.QSlider:[]}
-        
-        for a in attribList:
+
+
+    def getParamsDict(self):
+
+        baseDict = {qg.QSpinBox:['NUM','.value()','.setValue(',[]],qg.QDoubleSpinBox:['DBL','.value()','.setValue(',[]],
+                    qg.QLineEdit:['LINE','.text()','.setText(',[]],qg.QCheckBox:['CKBOX','.isChecked()','.setChecked(',[]]}
+
+        for d in dir(self):
+            dObj = getattr(self, d)
             try:
-                aObj = getattr(self,a)
-                self.attribDict[type(aObj)].append(aObj)
+                if dObj.isReadOnly():
+                    continue
             except:
                 pass
-            
-        for c in self.attribDict[eval('PyQt5.QtWidgets.QCheckBox')]:
-            print(c.objectName())
-        
+            if type(dObj) in baseDict.keys():
+                baseDict[type(dObj)][3].append(d)
+            else:
+                pass
+
+        return baseDict
+
+
     def configNum(self,numName,cfgName,cfgKey):
         
         culprit = getattr(self, numName)
@@ -357,5 +309,69 @@ class OTsUI(Ui_OTsUI_main):
     def saveParams(self):
         for k in self.attribDict.keys():
             self.paramSaveParser.add_section(str(k))
+
+
+    def numConnections(self):
+
+        # Setting up the interconnection between UI numeric controls
+
+        self.zPNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.zPDial))
+        self.zPDial.valueChanged.connect(lambda: self.setScaledValue(self.zPNumDbl))
+
+        self.zINumDbl.valueChanged.connect(lambda: self.setScaledValue(self.zIDial))
+        self.zIDial.valueChanged.connect(lambda: self.setScaledValue(self.zINumDbl))
+
+        self.xyPNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.xyPDial))
+        self.xyPDial.valueChanged.connect(lambda: self.setScaledValue(self.xyPNumDbl))
+
+        self.xyINumDbl.valueChanged.connect(lambda: self.setScaledValue(self.xyIDial))
+        self.xyIDial.valueChanged.connect(lambda: self.setScaledValue(self.xyINumDbl))
+
+        self.zOffSetNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.zOffSetDial))
+        self.zOffSetDial.valueChanged.connect(lambda: self.setScaledValue(self.zOffSetNumDbl))
+
+        self.xOffSetNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.xOffSetDial))
+        self.xOffSetDial.valueChanged.connect(lambda: self.setScaledValue(self.xOffSetNumDbl))
+
+        self.yOffSetNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.yOffSetDial))
+        self.yOffSetDial.valueChanged.connect(lambda: self.setScaledValue(self.yOffSetNumDbl))
+
+        self.xSpeedTrapPadSlider.valueChanged.connect(lambda: self.setScaledValue(self.xSpeedTrapPadNumDbl))
+        self.xSpeedTrapPadNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.xSpeedTrapPadSlider))
+
+        self.ySpeedTrapPadSlider.valueChanged.connect(lambda: self.setScaledValue(self.ySpeedTrapPadNumDbl))
+        self.ySpeedTrapPadNumDbl.valueChanged.connect(lambda: self.setScaledValue(self.ySpeedTrapPadSlider))
+
+        ######################################
+
+
+    def cmbBoxConnections(self):
+
+        # Setting Plot combo boxes
+
+        self.sig1selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
+        self.sig2selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
+        self.sig3selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
+
+        self.ps1selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
+        self.ps2selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
+        self.ps3selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
+
+        #################################################################################
+
+
+    def pathConnections(self):
+
+        # Set directories selection
+
+        self.logDirBtn.clicked.connect(lambda: self.selectDir(self.logDirLine))
+        self.parDirBtn.clicked.connect(lambda: self.selectDir(self.parDirLine))
+        self.dataDirBtn.clicked.connect(lambda: self.selectDir(self.dataDirLine))
+        self.logDirLine.textChanged.connect(lambda: self.updateDirObj(self.logDir))
+        self.parDirLine.textChanged.connect(lambda: self.updateDirObj(self.parDir))
+        self.dataDirLine.textChanged.connect(lambda: self.updateDirObj(self.dataDir))
+
+        #################################################################################
+
         
     

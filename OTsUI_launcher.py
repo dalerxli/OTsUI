@@ -1,9 +1,5 @@
-from epz import ch_fw as fw
-#from epz import ch_hw as hw
-#from epz import epdspic as pic
-#from epz import consumer_qt
+
 import sys
-import epz.epz3 as epz
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
@@ -18,10 +14,7 @@ class MainW(QMainWindow, OTsUI):
         self.setupUi(self)
         
 if __name__ == '__main__':
-    
-#    fw = epz.Forwarder()
-#    fw.start()
-    
+
     app = QApplication(sys.argv)
     
     mainForm = MainW()
