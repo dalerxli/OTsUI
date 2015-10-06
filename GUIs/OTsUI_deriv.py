@@ -1,26 +1,38 @@
-from dialogs.OTsUI_main import *
-from tools.guiUtils import *
+from GUIs.OTsUI_main import *
 from pyqtgraph import PlotWidget, AxisItem, setConfigOption
 from PyQt5.Qt import QStyle, QFileDialog
+from PyQt5.QtWidgets import QMainWindow
 import PyQt5
 import configparser as cfg
-from bcolz.py2help import xrange
 import numpy as np
 from os import sep
+
+try:
+    import epz as tempEpz
+    import inspect
+    _,_,keys,_ = inspect.getargspec(tempEpz.CMD.__init__())
+    if 'tag' not in keys:
+        import libs.epz as tempEpz
+    epz = tempEpz
+except:
+    from libs import epz
 
 setConfigOption('background', 'w')
 setConfigOption('foreground', (120,120,120))
 
 cfgParse = cfg.ConfigParser()
-f = open('dialogs\\config.ini', 'r')
+f = open('GUIs{0}config.ini'.format(sep), 'r')
 cfgParse.read_file(f)
 
 
 
-class OTsUI(Ui_OTsUI_main):
-    
-    def setupUi(self,MainWindow):
-        super(OTsUI, self).setupUi(MainWindow)
+class OTsUI(QMainWindow,Ui_OTsUI_main):
+
+    def __init__(self, parent=None):
+
+        super(OTsUI, self).__init__(parent)
+        self.setupUi(self)
+
         self.kx = -1
         self.ky = -1
         self.kz = -1
@@ -32,7 +44,13 @@ class OTsUI(Ui_OTsUI_main):
         self.parDir = ''
         self.paramSaveParser = cfg.ConfigParser()
         self.paramLoadParser = cfg.ConfigParser()
-        
+
+        # epz objects
+
+        self.otsuiEnv = epz.Environment()
+
+        #######################################################################
+
         # Plot items
         
         self.trapPadPlot.plotItem.showAxis('top', show=True)
@@ -51,6 +69,8 @@ class OTsUI(Ui_OTsUI_main):
         #######################################################################
         
         # Set num controls
+
+        self.parDict = self.getParamsDict()
         
         ctrls = ['xyPNumDbl',
                 'xyINumDbl',
@@ -235,16 +255,20 @@ class OTsUI(Ui_OTsUI_main):
                    'CUSTEXP',
                    'CUSTEXP']
         
-        for i in xrange(len(ctrls)):
+        for i in range(len(ctrls)):
             self.configNum(ctrls[i], cfgCtrls[i], cfgKeys[i])
             
         #################################################################################
 
+        self.numConnections()
+        self.cmbBoxConnections()
+        self.pathConnections()
+
 
     def getParamsDict(self):
 
-        baseDict = {qg.QSpinBox:['NUM','.value()','.setValue(',[]],qg.QDoubleSpinBox:['DBL','.value()','.setValue(',[]],
-                    qg.QLineEdit:['LINE','.text()','.setText(',[]],qg.QCheckBox:['CKBOX','.isChecked()','.setChecked(',[]]}
+        baseDict = {PyQt5.QtWidgets.QSpinBox:['NUM','.value()','.setValue(',[]],PyQt5.QtWidgets.QDoubleSpinBox:['DBL','.value()','.setValue(',[]],
+                    PyQt5.QtWidgets.QLineEdit:['LINE','.text()','.setText(',[]],PyQt5.QtWidgets.QCheckBox:['CKBOX','.isChecked()','.setChecked(',[]]}
 
         for d in dir(self):
             dObj = getattr(self, d)
@@ -278,7 +302,7 @@ class OTsUI(Ui_OTsUI_main):
         equalValCmb = [l for l in listCmbChild if l.currentIndex()==sendCmb.currentIndex()][0]
         elements = list(range(sendCmb.count()))
         elements.remove(sendCmb.currentIndex())
-        listOtherChild = [c for c in listCmbChild if  c is not equalValCmb]
+        listOtherChild = [c for c in listCmbChild if c is not equalValCmb]
         for c in listOtherChild:
             elements.remove(c.currentIndex())
         equalValCmb.blockSignals(True)
