@@ -6,6 +6,7 @@ import PyQt5
 import configparser as cfg
 import numpy as np
 from os import sep
+from GUIs.configUI_deriv import configDial
 
 try:
     import epz as tempEpz
@@ -20,10 +21,7 @@ except:
 setConfigOption('background', 'w')
 setConfigOption('foreground', (120,120,120))
 
-cfgParse = cfg.ConfigParser()
-f = open('GUIs{0}config.ini'.format(sep), 'r')
-cfgParse.read_file(f)
-
+INCR = 0.01
 
 
 class OTsUI(QMainWindow,Ui_OTsUI_main):
@@ -32,7 +30,9 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
         super(OTsUI, self).__init__(parent)
         self.setupUi(self)
-
+        self.cfgFile = QFileDialog.getOpenFileName(self,'Select a configuration file',filter='Ini (*.ini)')[0]
+        if self.cfgFile == '':
+            self.cfgFile = 'config/defaultCfg.ini'
         self.kx = -1
         self.ky = -1
         self.kz = -1
@@ -42,8 +42,6 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.logDir = ''
         self.dataDir = ''
         self.parDir = ''
-        self.paramSaveParser = cfg.ConfigParser()
-        self.paramLoadParser = cfg.ConfigParser()
 
         # epz objects
 
@@ -255,14 +253,15 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
                    'CUSTEXP',
                    'CUSTEXP']
         
-        for i in range(len(ctrls)):
-            self.configNum(ctrls[i], cfgCtrls[i], cfgKeys[i])
+        #for i in range(len(ctrls)):
+            #self.configNum(ctrls[i], cfgCtrls[i], cfgKeys[i])
             
         #################################################################################
 
         self.numConnections()
         self.cmbBoxConnections()
         self.pathConnections()
+        self.actionConnections()
 
 
     def getParamsDict(self):
@@ -288,11 +287,11 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def configNum(self,numName,cfgName,cfgKey):
         
         culprit = getattr(self, numName)
-        scale = (1/float(cfgParse[cfgKey][cfgName+'INCR'])) if (type(culprit) == PyQt5.QtWidgets.QDial or type(culprit) == PyQt5.QtWidgets.QSlider) else 1
-        getattr(self, numName).setMaximum(float(cfgParse[cfgKey][cfgName+'MAX'])*scale)
-        getattr(self, numName).setMinimum(float(cfgParse[cfgKey][cfgName+'MIN'])*scale)
-        getattr(self, numName).setSingleStep(float(cfgParse[cfgKey][cfgName+'INCR'])*scale)
-        getattr(self, numName).setValue(float(cfgParse[cfgKey][cfgName])*scale)
+        scale = (1/INCR) if (type(culprit) == PyQt5.QtWidgets.QDial or type(culprit) == PyQt5.QtWidgets.QSlider) else 1
+        getattr(self, numName).setMaximum(float(self.cfgParse[cfgKey][cfgName+'MAX'])*scale)
+        getattr(self, numName).setMinimum(float(self.cfgParse[cfgKey][cfgName+'MIN'])*scale)
+        getattr(self, numName).setSingleStep(INCR*scale)
+        getattr(self, numName).setValue(float(self.cfgParse[cfgKey][cfgName])*scale)
         
     
     def changeCmbGrMem(self):
@@ -333,6 +332,15 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def saveParams(self):
         for k in self.attribDict.keys():
             self.paramSaveParser.add_section(str(k))
+
+
+    def showDial(self):
+
+        culprit = self.sender()
+
+        if culprit is self.action_Config_File:
+            self.cfgDial = configDial(self.cfgFile,self)
+            self.cfgDial.exec_()
 
 
     def numConnections(self):
@@ -396,6 +404,11 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.dataDirLine.textChanged.connect(lambda: self.updateDirObj(self.dataDir))
 
         #################################################################################
+
+
+    def actionConnections(self):
+
+        self.action_Config_File.triggered.connect(self.showDial)
 
         
     
