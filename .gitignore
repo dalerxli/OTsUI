@@ -6,3 +6,4 @@ dialogs/cfgkeys.txt
 *.xml
 .idea/.name
 *.iml
+*.par

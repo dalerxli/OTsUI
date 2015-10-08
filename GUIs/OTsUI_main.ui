@@ -134,20 +134,17 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="dataDirLab">
-              <property name="text">
-               <string>Data directory</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="dataDirLine"/>
-            </item>
             <item row="5" column="1">
              <widget class="QPushButton" name="logDirBtn">
               <property name="text">
                <string>Browse</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="dataDirLab">
+              <property name="text">
+               <string>Data directory</string>
               </property>
              </widget>
             </item>
@@ -157,6 +154,9 @@
                <string>Log directory</string>
               </property>
              </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="dataDirLine"/>
             </item>
             <item row="6" column="0">
              <widget class="QLabel" name="logNameLab">
@@ -168,52 +168,8 @@
             <item row="4" column="1">
              <widget class="QLineEdit" name="logDirLine"/>
             </item>
-            <item row="10" column="0">
-             <widget class="QLabel" name="parNameLab">
-              <property name="text">
-               <string>Param.s file name</string>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="1">
-             <widget class="QPushButton" name="parDirBtn">
-              <property name="text">
-               <string>Browse</string>
-              </property>
-             </widget>
-            </item>
             <item row="6" column="1">
              <widget class="QLineEdit" name="logNameLine"/>
-            </item>
-            <item row="8" column="1">
-             <widget class="QLineEdit" name="parDirLine"/>
-            </item>
-            <item row="8" column="0">
-             <widget class="QLabel" name="parDirLab">
-              <property name="text">
-               <string>Param.s directory</string>
-              </property>
-             </widget>
-            </item>
-            <item row="11" column="1">
-             <widget class="QPushButton" name="parLoadBtn">
-              <property name="text">
-               <string>Load Param.s</string>
-              </property>
-             </widget>
-            </item>
-            <item row="11" column="0">
-             <widget class="QPushButton" name="parSaveBtn">
-              <property name="text">
-               <string>Save Param.s</string>
-              </property>
-             </widget>
-            </item>
-            <item row="10" column="1">
-             <widget class="QLineEdit" name="parNameLine"/>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLineEdit" name="dataNameLine"/>
             </item>
             <item row="2" column="0">
              <widget class="QLabel" name="dataNameLab">
@@ -221,6 +177,9 @@
                <string>Experiment name</string>
               </property>
              </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="dataNameLine"/>
             </item>
             <item row="3" column="0" colspan="2">
              <widget class="Line" name="line_3">
@@ -606,8 +565,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>147</width>
-                <height>209</height>
+                <width>180</width>
+                <height>396</height>
                </rect>
               </property>
               <attribute name="label">
@@ -721,8 +680,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>167</width>
-                <height>180</height>
+                <width>180</width>
+                <height>396</height>
                </rect>
               </property>
               <attribute name="label">
@@ -1872,6 +1831,8 @@
      <string>&amp;File</string>
     </property>
     <addaction name="action_Config_File"/>
+    <addaction name="action_Save_Parameters"/>
+    <addaction name="action_Load_Parameters"/>
    </widget>
    <addaction name="menu_File"/>
   </widget>
@@ -1879,6 +1840,16 @@
   <action name="action_Config_File">
    <property name="text">
     <string>&amp;Config File</string>
+   </property>
+  </action>
+  <action name="action_Save_Parameters">
+   <property name="text">
+    <string>&amp;Save Parameters</string>
+   </property>
+  </action>
+  <action name="action_Load_Parameters">
+   <property name="text">
+    <string>&amp;Load Parameters</string>
    </property>
   </action>
  </widget>

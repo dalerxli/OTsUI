@@ -1,11 +1,12 @@
 from GUIs.OTsUI_main import *
 from pyqtgraph import PlotWidget, AxisItem, setConfigOption
 from PyQt5.Qt import QStyle, QFileDialog
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 import PyQt5
 import configparser as cfg
 import numpy as np
 from os import sep
+from os.path import splitext
 from GUIs.configUI_deriv import configDial
 
 try:
@@ -69,189 +70,9 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         # Set num controls
 
         self.parDict = self.getParamsDict()
-        
-        ctrls = ['xyPNumDbl',
-                'xyINumDbl',
-                'xyPDial',
-                'xyIDial',
-                'zPNumDbl',
-                'zINumDbl',
-                'zPDial',
-                'zIDial',
-                'xSpeedTrapPadNumDbl',
-                'ySpeedTrapPadNumDbl',
-                'xSpeedTrapPadSlider',
-                'ySpeedTrapPadSlider',
-                'xOffSetNumDbl',
-                'yOffSetNumDbl',
-                'zOffSetNumDbl',
-                'xOffSetDial',
-                'yOffSetDial',
-                'zOffSetDial',
-                'passiveCalDurNumDbl',
-                'passiveCalMaxFreqNumDbl',
-                'passiveCalAvgNum',
-                'activeCalXAmplNumDbl',
-                'activeCalYAmplNumDbl',
-                'activeCalZAmplNumDbl',
-                'activeCalXFreqNumDbl',
-                'activeCalYFreqNumDbl',
-                'activeCalZFreqNumDbl',
-                'activeCalDurNumDbl',
-                'activeCalMaxFreqNumDbl',
-                'activeCalAvgNum',
-                'radiusNumDbl',
-                'dynViscNumDbl',
-                'kxNumDbl',
-                'kyNumDbl',
-                'kzNumDbl',
-                'SxNumDbl',
-                'SyNumDbl',
-                'SzNumDbl',
-                'stdExpXSetPntNumDbl',
-                'stdExpYSetPntNumDbl',
-                'stdExpZSetPntNumDbl',
-                'stdExpDurNumDbl',
-                'fbSchedNumIntNum',
-                'fbSchedOnDurNumDbl',
-                'fbSchedOffDurNumDbl',
-                'customExpXNumIntNum',
-                'customExpXOnDurNumDbl',
-                'customExpXOffDurNumDbl',
-                'customExpXAmplNumDbl',
-                'customExpXFreqNumDbl',
-                'customExpYNumIntNum',
-                'customExpYOnDurNumDbl',
-                'customExpYOffDurNumDbl',
-                'customExpYAmplNumDbl',
-                'customExpYFreqNumDbl',
-                'customExpZNumIntNum',
-                'customExpZOnDurNumDbl',
-                'customExpZOffDurNumDbl',
-                'customExpZAmplNumDbl',
-                'customExpZFreqNumDbl']
-        
-        cfgCtrls = ['XYP',
-                   'XYI',
-                   'XYP',
-                   'XYI',
-                   'ZI',
-                   'ZP',
-                   'ZI',
-                   'ZP',
-                   'XSPEED',
-                   'YSPEED',
-                   'XSPEED',
-                   'YSPEED',
-                   'XO',
-                   'YO',
-                   'ZO',
-                   'XO',
-                   'YO',
-                   'ZO',
-                   'DUR',
-                   'MAXFREQ',
-                   'AVG',
-                   'XAMPL',
-                   'YAMPL',
-                   'ZAMPL',
-                   'XFREQ',
-                   'YFREQ',
-                   'ZFREQ',
-                   'DUR',
-                   'MAXFREQ',
-                   'AVG',
-                   'RADIUS',
-                   'DYNVISC',
-                   'KX',
-                   'KY',
-                   'KZ',
-                   'SX',
-                   'SY',
-                   'SZ',
-                   'XSP',
-                   'YSP',
-                   'ZSP',
-                   'DUR',
-                   'INTNUM',
-                   'ONDUR',
-                   'OFFDUR',
-                   'XINTNUM',
-                   'XONDUR',
-                   'XOFFDUR',
-                   'XAMPL',
-                   'XFREQ',
-                   'YINTNUM',
-                   'YONDUR',
-                   'YOFFDUR',
-                   'YAMPL',
-                   'YFREQ',
-                   'ZINTNUM',
-                   'ZONDUR',
-                   'ZOFFDUR',
-                   'ZAMPL',
-                   'ZFREQ']
-        
-        cfgKeys = ['PI',
-                   'PI',
-                   'PI',
-                   'PI',
-                   'PI',
-                   'PI',
-                   'PI',
-                   'PI',
-                   'PAD',
-                   'PAD',
-                   'PAD',
-                   'PAD',
-                   'OFFSET',
-                   'OFFSET',
-                   'OFFSET',
-                   'OFFSET',
-                   'OFFSET',
-                   'OFFSET',
-                   'PASSIVECALIB',
-                   'PASSIVECALIB',
-                   'PASSIVECALIB',
-                   'ACTIVECALIB',
-                   'ACTIVECALIB',
-                   'ACTIVECALIB',
-                   'ACTIVECALIB',
-                   'ACTIVECALIB',
-                   'ACTIVECALIB',
-                   'ACTIVECALIB',
-                   'ACTIVECALIB',
-                   'ACTIVECALIB',
-                   'GENPAR',
-                   'GENPAR',
-                   'CALRESULTS',
-                   'CALRESULTS',
-                   'CALRESULTS',
-                   'CALRESULTS',
-                   'CALRESULTS',
-                   'CALRESULTS',
-                   'STDEXP',
-                   'STDEXP',
-                   'STDEXP',
-                   'STDEXP',
-                   'FBSCHED',
-                   'FBSCHED',
-                   'FBSCHED',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP',
-                   'CUSTEXP']
+        parser = cfg.ConfigParser()
+        parser.read(self.cfgFile)
+        self.configDict = self.createConfigDict(parser)
         
         #for i in range(len(ctrls)):
             #self.configNum(ctrls[i], cfgCtrls[i], cfgKeys[i])
@@ -264,10 +85,23 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.actionConnections()
 
 
+    def createConfigDict(self,parser):
+        paramsDict = {}
+        secs = parser.sections()
+        for s in secs:
+            paramsDict[s] = {}
+            options = parser.options(s)
+            for o in options:
+                paramsDict[s][o] = parser.get(s,o)
+
+        return paramsDict
+
+
     def getParamsDict(self):
 
         baseDict = {PyQt5.QtWidgets.QSpinBox:['NUM','.value()','.setValue(',[]],PyQt5.QtWidgets.QDoubleSpinBox:['DBL','.value()','.setValue(',[]],
-                    PyQt5.QtWidgets.QLineEdit:['LINE','.text()','.setText(',[]],PyQt5.QtWidgets.QCheckBox:['CKBOX','.isChecked()','.setChecked(',[]]}
+                    PyQt5.QtWidgets.QLineEdit:['LINE','.text()','.setText(',[]],PyQt5.QtWidgets.QCheckBox:['CKBOX','.isChecked()','.setChecked(',[]],
+                    PyQt5.QtWidgets.QComboBox:['CMBBOX','.currentIndex()','.setCurrentIndex(',[]]}
 
         for d in dir(self):
             dObj = getattr(self, d)
@@ -282,6 +116,60 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
                 pass
 
         return baseDict
+
+
+    def saveParams(self):
+
+        parFileName = str(QFileDialog.getSaveFileName(self,'Choose a name for you parameters file',filter='Parameters Files (*.par)')[0])
+        if parFileName == '':
+            return None
+        splitName = splitext(parFileName)
+        if splitName[1] != '.par':
+            parFileName = splitName[0]+'.par'
+
+        sDict = self.getParamsDict()
+        paramsFile = open(parFileName,'w')
+        paramsParser = cfg.ConfigParser()
+
+        paramsParser.add_section('MISC')
+        paramsParser.set('MISC','ot',self.cfgFile)
+        for k in sDict.keys():
+            paramsParser.add_section(sDict[k][0])
+            for i in range(len(sDict[k][3])):
+                paramsParser.set(sDict[k][0], sDict[k][3][i], str(eval('self.'+sDict[k][3][i]+sDict[k][1])))
+
+        paramsParser.write(paramsFile)
+        paramsFile.close()
+
+
+    def loadParams(self):
+
+        self.cmbBoxDisconnect()
+        parFileName = str(QFileDialog.getOpenFileName(self,'Choose a parameters file',filter='Parameters Files (*.par)')[0])
+        if parFileName == '':
+            return None
+        lDict = self.getParamsDict()
+        #paramsFile = open(parFileName,'r')
+        paramsParser = cfg.ConfigParser()
+        paramsParser.read(parFileName)
+        print(paramsParser.sections())
+        if paramsParser.get('MISC', 'ot') != self.cfgFile:
+            warning = QMessageBox(self)
+            warning.setText('You tried to load parameters that have been saved for another OT\n'+
+                            'Please choose a parameter file for you current OT')
+            warning.exec_()
+            self.loadParams()
+        attrList = dir(self)
+        for a in attrList:
+            for k in lDict.keys():
+                if a in lDict[k][3]:
+                    value = paramsParser.get(lDict[k][0],a.lower())
+                    try:
+                        value = str(eval(value))
+                    except:
+                        value = '\'' + value + '\''
+                    eval('self.' + a + lDict[k][2] + value + ')')
+        self.cmbBoxConnections()
 
 
     def configNum(self,numName,cfgName,cfgKey):
@@ -327,11 +215,6 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         culprit = self.sender()
         dir = culprit.text()
         dir=dir.replace('/',sep)
-        
-    
-    def saveParams(self):
-        for k in self.attribDict.keys():
-            self.paramSaveParser.add_section(str(k))
 
 
     def showDial(self):
@@ -389,6 +272,19 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.ps2selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
         self.ps3selCmb.currentIndexChanged.connect(self.changeCmbGrMem)
 
+
+    def cmbBoxDisconnect(self):
+
+        # Setting Plot combo boxes
+
+        self.sig1selCmb.currentIndexChanged.disconnect()
+        self.sig2selCmb.currentIndexChanged.disconnect()
+        self.sig3selCmb.currentIndexChanged.disconnect()
+
+        self.ps1selCmb.currentIndexChanged.disconnect()
+        self.ps2selCmb.currentIndexChanged.disconnect()
+        self.ps3selCmb.currentIndexChanged.disconnect()
+
         #################################################################################
 
 
@@ -397,10 +293,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         # Set directories selection
 
         self.logDirBtn.clicked.connect(lambda: self.selectDir(self.logDirLine))
-        self.parDirBtn.clicked.connect(lambda: self.selectDir(self.parDirLine))
         self.dataDirBtn.clicked.connect(lambda: self.selectDir(self.dataDirLine))
         self.logDirLine.textChanged.connect(lambda: self.updateDirObj(self.logDir))
-        self.parDirLine.textChanged.connect(lambda: self.updateDirObj(self.parDir))
         self.dataDirLine.textChanged.connect(lambda: self.updateDirObj(self.dataDir))
 
         #################################################################################
@@ -409,6 +303,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def actionConnections(self):
 
         self.action_Config_File.triggered.connect(self.showDial)
+        self.action_Save_Parameters.triggered.connect(self.saveParams)
+        self.action_Load_Parameters.triggered.connect(self.loadParams)
 
         
     

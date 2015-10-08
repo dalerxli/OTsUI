@@ -5,7 +5,10 @@ from PyQt5.QtWidgets import QDialog, QMessageBox
 import PyQt5
 import configparser as cfg
 from os import sep
+from os.path import splitext
 from libs.usefulVar import nameTypeDict, gettingSettingSignalDict
+
+NAMES = ['Num','NumDbl','Line']
 
 class configDial(Ui_configDial,QDialog):
 
@@ -29,11 +32,11 @@ class configDial(Ui_configDial,QDialog):
             self.paramsDict[s] = {}
             options = self.parser.options(s)
             for o in options:
-                self.paramsDict[s][o] = [self.parser.get(s,o),None]
-        self.ipaddr_Line.setText(self.paramsDict['CONN']['ipaddr'][0])
-        self.pubport_Line.setText(self.paramsDict['CONN']['pubport'][0])
-        self.subport_Line.setText(self.paramsDict['CONN']['subport'][0])
-        self.stimmaxfreq_NumDbl.setValue(float(self.paramsDict['OTHER']['stimmaxfreq'][0]))
+                self.paramsDict[s][o] = self.parser.get(s,o)
+        self.ipaddr_Line.setText(self.paramsDict['CONN']['ipaddr'])
+        self.pubport_Line.setText(self.paramsDict['CONN']['pubport'])
+        self.subport_Line.setText(self.paramsDict['CONN']['subport'])
+        self.stimmaxfreq_NumDbl.setValue(float(self.paramsDict['OTHER']['stimmaxfreq']))
 
 
     def fillAxis(self):
@@ -43,19 +46,14 @@ class configDial(Ui_configDial,QDialog):
             self.disconnect()
         except:
             pass
-        self.devname_Line.setText(self.paramsDict[axis]['devname'][0])
-        self.vgalvmax_NumDbl.setValue(float(self.paramsDict[axis]['vgalvmax'][0]))
-        self.vgalvmin_NumDbl.setValue(float(self.paramsDict[axis]['vgalvmin'][0]))
-        self.nmgalvmax_NumDbl.setValue(float(self.paramsDict[axis]['nmgalvmax'][0]))
-        self.nmgalvmin_NumDbl.setValue(float(self.paramsDict[axis]['nmgalvmin'][0]))
-        self.qpdmax_NumDbl.setValue(float(self.paramsDict[axis]['qpdmax'][0]))
-        self.qpdmin_NumDbl.setValue(float(self.paramsDict[axis]['qpdmin'][0]))
-        self.pmax_NumDbl.setValue(float(self.paramsDict[axis]['pmax'][0]))
-        self.imax_NumDbl.setValue(float(self.paramsDict[axis]['imax'][0]))
-        self.speedmax_NumDbl.setValue(float(self.paramsDict[axis]['speedmax'][0]))
+        for k in self.paramsDict[axis].keys():
+            for n in NAMES:
+                if k+'_'+n in dir(self):
+                    eval('self.{0}.{1}{2}\'))'.format((k+'_'+n),gettingSettingSignalDict[n][1],self.paramsDict[axis][k]))
 
         self.speedmax_NumDbl.setEnabled(axis!='ZAXIS')
         self.imax_NumDbl.setEnabled(axis!='YAXIS')
+        self.pmax_NumDbl.setEnabled(axis!='YAXIS')
 
         self.connections()
 
@@ -66,7 +64,17 @@ class configDial(Ui_configDial,QDialog):
         name = nameTypeDict[type(culprit)]
         funcs = gettingSettingSignalDict[name]
         culpritTag = culprit.objectName().split('_')[0]
-        self.paramsDict[axis][culpritTag][0] = str(eval('self.{0}.{1}'.format(culprit.objectName(),funcs[0])))
+        self.paramsDict[axis][culpritTag] = str(eval('self.{0}.{1}'.format(culprit.objectName(),funcs[0])))
+        if axis == 'XAXIS' and (culpritTag == 'pmax' or culpritTag == 'imax'):
+            self.paramsDict['YAXIS'][culpritTag] = self.paramsDict[axis][culpritTag]
+
+
+    def buildSignal(self,name):
+
+        for n in NAMES:
+            if name+'_'+n in dir(self):
+                control = 'self.{0}_{1}'.format(name,n)
+                return control,'.'+gettingSettingSignalDict[n][2]
 
 
     def connections(self):
@@ -91,23 +99,41 @@ class configDial(Ui_configDial,QDialog):
     def disconnect(self):
 
         self.axisCmbBox.currentIndexChanged.disconnect()
-        self.ipaddr_Line.textChanged.disconnect()
-        self.pubport_Line.textChanged.disconnect()
-        self.subport_Line.textChanged.disconnect()
-        self.stimmaxfreq_NumDbl.valueChanged.disconnect()
-        self.devname_Line.textChanged.disconnect()
-        self.vgalvmax_NumDbl.valueChanged.disconnect()
-        self.vgalvmin_NumDbl.valueChanged.disconnect()
-        self.nmgalvmax_NumDbl.valueChanged.disconnect()
-        self.nmgalvmin_NumDbl.valueChanged.disconnect()
-        self.qpdmax_NumDbl.valueChanged.disconnect()
-        self.qpdmin_NumDbl.valueChanged.disconnect()
-        self.pmax_NumDbl.valueChanged.disconnect()
-        self.imax_NumDbl.valueChanged.disconnect()
-        self.speedmax_NumDbl.valueChanged.disconnect()
+
+        for s in ['CONN','OTHER','XAXIS']:
+            for o in self.paramsDict[s].keys():
+                ctrl,sig = self.buildSignal(o)
+                eval(ctrl+sig+'.disconnect()')
+
+
+    def saveParams(self):
+
+        for s in self.paramsDict.keys():
+            for o in self.paramsDict[s].keys():
+                self.parser.set(s,o,self.paramsDict[s][o])
+
+        warningDial = QMessageBox(self)
+        warningDial.setWindowTitle('Saving...')
+        warningDial.setText('Do you want to create a new configuration file?')
+        warningDial.setStandardButtons(QMessageBox.Yes|QMessageBox.No)
+        warningDial.setDefaultButton(QMessageBox.No)
+        answer = warningDial.exec_()
+        if answer == 65536:
+            fp = open(self.cfgFile,'w')
+        else:
+            fname = str(QFileDialog.getSaveFileName(self,'Choose a name for your new configuration file:',filter='Ini (*.ini)'))
+            sf = splitext(fname)
+            if sf[1] != '.ini':
+                fname = sf[0]+'.ini'
+            fp = open(fname,'w')
+
+        self.parser.write(fp)
+
 
 
     def accept(self):
+
+        self.saveParams()
 
         warningDial = QMessageBox(self)
         warningDial.setWindowTitle('WARNING')
