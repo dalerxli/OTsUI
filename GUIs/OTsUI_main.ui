@@ -324,87 +324,89 @@
            </layout>
           </widget>
           <widget class="QWidget" name="psPage">
-           <property name="cursor">
-            <cursorShape>WaitCursor</cursorShape>
-           </property>
            <attribute name="title">
             <string>Power spectrums</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout" rowstretch="3,1,2,1">
-            <item row="3" column="0">
-             <widget class="QComboBox" name="ps2selCmb">
-              <property name="currentIndex">
-               <number>1</number>
-              </property>
+           <layout class="QVBoxLayout" name="verticalLayout_2" stretch="7,5">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout">
               <item>
-               <property name="text">
-                <string>X</string>
-               </property>
+               <widget class="PlotWidget" name="powSpec1Plot"/>
               </item>
               <item>
-               <property name="text">
-                <string>Y</string>
-               </property>
+               <widget class="QComboBox" name="ps1selCmb">
+                <item>
+                 <property name="text">
+                  <string>X</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Y</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Z</string>
+                 </property>
+                </item>
+               </widget>
               </item>
-              <item>
-               <property name="text">
-                <string>Z</string>
-               </property>
-              </item>
-             </widget>
+             </layout>
             </item>
-            <item row="2" column="0">
-             <widget class="PlotWidget" name="powSpec2Plot"/>
-            </item>
-            <item row="2" column="1">
-             <widget class="PlotWidget" name="powSpec3Plot"/>
-            </item>
-            <item row="3" column="1">
-             <widget class="QComboBox" name="ps3selCmb">
-              <property name="currentIndex">
-               <number>2</number>
-              </property>
-              <item>
-               <property name="text">
-                <string>X</string>
-               </property>
+            <item>
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="0" column="1">
+               <widget class="PlotWidget" name="powSpec3Plot"/>
               </item>
-              <item>
-               <property name="text">
-                <string>Y</string>
-               </property>
+              <item row="0" column="0">
+               <widget class="PlotWidget" name="powSpec2Plot"/>
               </item>
-              <item>
-               <property name="text">
-                <string>Z</string>
-               </property>
+              <item row="1" column="0">
+               <widget class="QComboBox" name="ps2selCmb">
+                <property name="currentIndex">
+                 <number>1</number>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>X</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Y</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Z</string>
+                 </property>
+                </item>
+               </widget>
               </item>
-             </widget>
-            </item>
-            <item row="0" column="0" colspan="2">
-             <widget class="PlotWidget" name="powSpec1Plot"/>
-            </item>
-            <item row="1" column="0" colspan="2">
-             <widget class="QComboBox" name="ps1selCmb">
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
-              </property>
-              <item>
-               <property name="text">
-                <string>X</string>
-               </property>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="ps3selCmb">
+                <property name="currentIndex">
+                 <number>2</number>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>X</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Y</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Z</string>
+                 </property>
+                </item>
+               </widget>
               </item>
-              <item>
-               <property name="text">
-                <string>Y</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Z</string>
-               </property>
-              </item>
-             </widget>
+             </layout>
             </item>
            </layout>
           </widget>
@@ -1833,6 +1835,7 @@
     <addaction name="action_Config_File"/>
     <addaction name="action_Save_Parameters"/>
     <addaction name="action_Load_Parameters"/>
+    <addaction name="action_Exit"/>
    </widget>
    <addaction name="menu_File"/>
   </widget>
@@ -1846,10 +1849,24 @@
    <property name="text">
     <string>&amp;Save Parameters</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="action_Load_Parameters">
    <property name="text">
     <string>&amp;Load Parameters</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="action_Exit">
+   <property name="text">
+    <string>&amp;Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+E</string>
    </property>
   </action>
  </widget>

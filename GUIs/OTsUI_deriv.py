@@ -20,7 +20,7 @@ except:
     from libs import epz
 
 setConfigOption('background', 'w')
-setConfigOption('foreground', (120,120,120))
+setConfigOption('foreground', (100,100,100))
 
 INCR = 0.01
 
@@ -70,9 +70,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         # Set num controls
 
         self.parDict = self.getParamsDict()
-        parser = cfg.ConfigParser()
-        parser.read(self.cfgFile)
-        self.configDict = self.createConfigDict(parser)
+        self.applyConfig()
         
         #for i in range(len(ctrls)):
             #self.configNum(ctrls[i], cfgCtrls[i], cfgKeys[i])
@@ -95,6 +93,55 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
                 paramsDict[s][o] = parser.get(s,o)
 
         return paramsDict
+
+
+    def applyConfig(self):
+
+        parser = cfg.ConfigParser()
+        parser.read(self.cfgFile)
+        configDict = self.createConfigDict(parser)
+
+        configGroupDictX = {'nmgalvmax': [[self.activeCalXAmplNumDbl], ['nmgalvmin']],
+                            'qpdmax': [[self.stdExpXSetPntNumDbl,
+                                        self.customExpXAmplNumDbl], ['qpdmin']],
+                            'pmax': [[self.xyPNumDbl, self.xyPDial], ['0']],
+                            'imax': [[self.xyINumDbl, self.xyIDial], ['0']],
+                            'speedmax': [[self.xSpeedTrapPadNumDbl,
+                                          self.xSpeedTrapPadSlider], ['INCR']]}
+        configGroupDictY = {'nmgalvmax': [[self.activeCalYAmplNumDbl], ['nmgalvmin']],
+                            'qpdmax': [[self.stdExpYSetPntNumDbl,
+                                        self.customExpYAmplNumDbl], ['qpdmin']],
+                            'pmax': [[self.xyPNumDbl, self.xyPDial], ['0']],
+                            'imax': [[self.xyINumDbl, self.xyIDial], ['0']],
+                            'speedmax': [[self.ySpeedTrapPadNumDbl,
+                                          self.ySpeedTrapPadSlider], ['INCR']]}
+        configGroupDictZ = {'nmgalvmax': [[self.activeCalZAmplNumDbl], ['nmgalvmin']],
+                            'qpdmax': [[self.stdExpZSetPntNumDbl,
+                                        self.customExpZAmplNumDbl], ['qpdmin']],
+                            'pmax': [[self.zPNumDbl, self.zPDial], ['0']],
+                            'imax': [[self.zINumDbl, self.zIDial], ['0']], }
+        otherGroupDict = {'stimmaxfreq': [[self.activeCalXFreqNumDbl,self.activeCalYFreqNumDbl,
+                                           self.activeCalZFreqNumDbl],['0']]}
+        configNumDict = {'XAXIS':configGroupDictX, 'YAXIS':configGroupDictY,
+                         'ZAXIS':configGroupDictZ, 'OTHER':otherGroupDict}
+
+        self.ipAddLine.setText(configDict['CONN']['ipaddr'])
+        self.subPortLine.setText(configDict['CONN']['subport'])
+        self.pubPortLine.setText(configDict['CONN']['pubport'])
+        self.xDevName = configDict['XAXIS']['devname']
+        self.yDevName = configDict['YAXIS']['devname']
+        self.zDevName = configDict['ZAXIS']['devname']
+
+        for s in configNumDict.keys():
+            for o in configNumDict[s].keys():
+                for el in configNumDict[s][o][0]:
+                    scale = (1/INCR) if (type(el) == PyQt5.QtWidgets.QDial or type(el) == PyQt5.QtWidgets.QSlider) else 1
+                    max = float(configDict[s][o])
+                    minKey = configNumDict[s][o][1][0]
+                    min = float(configDict[s][minKey]) if (minKey != '0' and minKey != 'INCR') else eval(minKey)
+                    el.setMaximum(max*scale)
+                    el.setMinimum(min*scale)
+                    el.setSingleStep(INCR*scale)
 
 
     def getParamsDict(self):
