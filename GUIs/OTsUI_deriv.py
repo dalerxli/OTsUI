@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QMainWindow, QMessageBox
 import PyQt5
 import configparser as cfg
 import numpy as np
+from scipy.signal import welch
 from os import sep
 from os.path import splitext
 from GUIs.configUI_deriv import configDial
@@ -19,10 +20,17 @@ try:
 except:
     from libs import epz
 
+from libs.otsui2epz import Interpreter
+from libs.usefulVar import pens
+
 setConfigOption('background', 'w')
 setConfigOption('foreground', (100,100,100))
 
 INCR = 0.01
+
+DEC = 100
+CHUNK = 1000
+NOTLEN = 1000
 
 
 class OTsUI(QMainWindow,Ui_OTsUI_main):
@@ -34,15 +42,18 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.cfgFile = QFileDialog.getOpenFileName(self,'Select a configuration file',filter='Ini (*.ini)')[0]
         if self.cfgFile == '':
             self.cfgFile = 'config/defaultCfg.ini'
-        self.kx = -1
-        self.ky = -1
-        self.kz = -1
-        self.sx = -1
-        self.sy = -1
-        self.sz = -1
+        self.kx = 1
+        self.ky = 1
+        self.kz = 1
+        self.sx = 1
+        self.sy = 1
+        self.sz = 1
         self.logDir = ''
         self.dataDir = ''
         self.parDir = ''
+
+        self.powSpecConnected = False
+        self.signalConnected = False
 
         # epz objects
 
@@ -101,6 +112,13 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         parser.read(self.cfgFile)
         configDict = self.createConfigDict(parser)
 
+        self.xVToNm = lambda x: ((x-configDict['XAXIS']['vgalvmin'])/(configDict['XAXIS']['vgalvmax']-configDict['XAXIS']['vgalvmin']))*(configDict['XAXIS']['nmgalvmax']-configDict['XAXIS']['nmgalvmin'])+configDict['XAXIS']['nmgalvmin']
+        self.xNmToV = lambda x: ((x-configDict['XAXIS']['nmgalvmin'])/(configDict['XAXIS']['nmgalvmax']-configDict['XAXIS']['nmgalvmin']))*(configDict['XAXIS']['vgalvmax']-configDict['XAXIS']['vgalvmin'])+configDict['XAXIS']['vgalvmin']
+        self.yVToNm = lambda x: ((x-configDict['YAXIS']['vgalvmin'])/(configDict['YAXIS']['vgalvmax']-configDict['YAXIS']['vgalvmin']))*(configDict['YAXIS']['nmgalvmax']-configDict['YAXIS']['nmgalvmin'])+configDict['YAXIS']['nmgalvmin']
+        self.yNmToV = lambda x: ((x-configDict['YAXIS']['nmgalvmin'])/(configDict['YAXIS']['nmgalvmax']-configDict['YAXIS']['nmgalvmin']))*(configDict['YAXIS']['vgalvmax']-configDict['YAXIS']['vgalvmin'])+configDict['YAXIS']['vgalvmin']
+        self.XVToNm = lambda x: ((x-configDict['ZAXIS']['vgalvmin'])/(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin']))*(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin'])+configDict['ZAXIS']['nmgalvmin']
+        self.zNmToV = lambda x: ((x-configDict['ZAXIS']['nmgalvmin'])/(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin']))*(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin'])+configDict['ZAXIS']['vgalvmin']
+
         configGroupDictX = {'nmgalvmax': [[self.activeCalXAmplNumDbl], ['nmgalvmin']],
                             'qpdmax': [[self.stdExpXSetPntNumDbl,
                                         self.customExpXAmplNumDbl], ['qpdmin']],
@@ -142,6 +160,129 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
                     el.setMaximum(max*scale)
                     el.setMinimum(min*scale)
                     el.setSingleStep(INCR*scale)
+
+
+    def epzConnect(self):
+
+        self.xInterpreter = Interpreter(self.otsuiEnv,self.xDevName)
+        self.yInterpreter = Interpreter(self.otsuiEnv,self.yDevName)
+        self.zInterpreter = Interpreter(self.otsuiEnv,self.zDevName)
+
+        self.xData = epz.QtDATA(self.otsuiEnv,self.xDevName)
+        self.xData.decimate = DEC
+        self.xData.chunk = CHUNK
+        self.xData.notifyLength = NOTLEN
+        self.xData.notify = True
+        self.xData.yDataReceived.connect(self.trapTrack)
+        self.xData = epz.QtDATA(self.otsuiEnv,self.yDevName)
+        self.yData.decimate = DEC
+        self.yData.chunk = CHUNK
+        self.yData.notifyLength = NOTLEN
+        self.yData.notify = True
+        self.yData.yDataReceived.connect(self.trapTrack)
+        self.zData = epz.QtDATA(self.otsuiEnv,self.zDevName)
+        self.zData.decimate = DEC
+        self.zData.chunk = CHUNK
+        self.zData.notifyLength = NOTLEN
+        self.zData.notify = True
+        self.zData.yDataReceived.connect(self.trapTrack)
+
+
+    def startEpz(self):
+
+        self.xInterpreter.startDev()
+        self.yInterpreter.startDev()
+        self.zInterpreter.startDev()
+
+        self.xData.start()
+        self.yData.start()
+        self.zData.start()
+
+        self.linkPlotToData(self.plotTabs.currentIndex()==0)
+
+
+    def linkPlotToData(self, goSignal):
+
+        signals = [self.xData,self.yData,self.zData]
+        if goSignal:
+            if self.powSpecConnected or self.signalConnected:
+                for s in signals:
+                    s.chunkReceived.disconnect()
+            signals[self.sig1selCmb.currentIndex()].chunkReceived.connect(self.sig1Update)
+            signals[self.sig2selCmb.currentIndex()].chunkReceived.connect(self.sig2Update)
+            signals[self.sig3selCmb.currentIndex()].chunkReceived.connect(self.sig3Update)
+            self.signalConnected = True
+        else:
+            if self.powSpecConnected or self.signalConnected:
+                for s in signals:
+                    s.chunkReceived.disconnect()
+            signals[self.ps1selCmb.currentIndex()].chunkReceived.connect(self.ps1Update)
+            signals[self.ps2selCmb.currentIndex()].chunkReceived.connect(self.ps2Update)
+            signals[self.ps3selCmb.currentIndex()].chunkReceived.connect(self.ps3Update)
+            self.powSpecConnected = True
+
+
+    def sig1Update(self,v):
+
+        self.sig1Plot.plotItem.clear()
+        S = list([self.sx,self.sy,self.sz])[self.sig1selCmb.currentIndex()]
+        k = list([self.kx,self.ky,self.kz])[self.sig1selCmb.currentIndex()]
+        plottableY = np.array(v[1])*S*k
+        plottableX = np.array(v[0])-v[0][0]
+        self.sig1Plot.plotItem.plot(plottableX,plottableY,pen=pens[0])
+
+
+    def sig2Update(self,v):
+
+        self.sig2Plot.plotItem.clear()
+        S = list([self.sx,self.sy,self.sz])[self.sig2selCmb.currentIndex()]
+        k = list([self.kx,self.ky,self.kz])[self.sig2selCmb.currentIndex()]
+        plottableY = np.array(v[1])*S*k
+        plottableX = np.array(v[0])-v[0][0]
+        self.sig1P2ot.plotItem.plot(plottableX,plottableY,pen=pens[1])
+
+
+    def sig3Update(self,v):
+
+        self.sig3Plot.plotItem.clear()
+        S = list([self.sx,self.sy,self.sz])[self.sig3selCmb.currentIndex()]
+        k = list([self.kx,self.ky,self.kz])[self.sig3selCmb.currentIndex()]
+        plottableY = np.array(v[1])*S*k
+        plottableX = np.array(v[0])-v[0][0]
+        self.sig3Plot.plotItem.plot(plottableX,plottableY,pen=pens[2])
+
+
+    def ps1Update(self,v):
+
+        self.powSpec1Plot.plotItem.clear()
+        S = list([self.sx,self.sy,self.sz])[self.ps1selCmb.currentIndex()]
+        k = list([self.kx,self.ky,self.kz])[self.ps1selCmb.currentIndex()]
+        tempY = np.array(v[1])*S*k
+        sampF = 1.0/np.mean(np.array(v[0])[1:]-np.array(v[0])[:-1])
+        plottableX,plottableY = welch(tempY,sampF)
+        self.powSpec1Plot.plotItem.plot(plottableX,plottableY,pen=pens[0])
+
+
+    def ps2Update(self,v):
+
+        self.powSpec2Plot.plotItem.clear()
+        S = list([self.sx,self.sy,self.sz])[self.ps2selCmb.currentIndex()]
+        k = list([self.kx,self.ky,self.kz])[self.ps2selCmb.currentIndex()]
+        tempY = np.array(v[1])*S*k
+        sampF = 1.0/np.mean(np.array(v[0])[1:]-np.array(v[0])[:-1])
+        plottableX,plottableY = welch(tempY,sampF)
+        self.powSpec2Plot.plotItem.plot(plottableX,plottableY,pen=pens[1])
+
+
+    def ps3Update(self,v):
+
+        self.powSpec3Plot.plotItem.clear()
+        S = list([self.sx,self.sy,self.sz])[self.ps3selCmb.currentIndex()]
+        k = list([self.kx,self.ky,self.kz])[self.ps3selCmb.currentIndex()]
+        tempY = np.array(v[1])*S*k
+        sampF = 1.0/np.mean(np.array(v[0])[1:]-np.array(v[0])[:-1])
+        plottableX,plottableY = welch(tempY,sampF)
+        self.powSpec3Plot.plotItem.plot(plottableX,plottableY,pen=pens[0])
 
 
     def getParamsDict(self):
@@ -242,6 +383,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         equalValCmb.blockSignals(True)
         equalValCmb.setCurrentIndex(elements[0])
         equalValCmb.blockSignals(False)
+
+        self.linkPlotToData((sendCmb is self.sig1selCmb or sendCmb is self.sig1selCmb or sendCmb is self.sig1selCmb))
         
     
     def setScaledValue(self,rec):
