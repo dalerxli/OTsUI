@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1157</width>
-    <height>848</height>
+    <width>1401</width>
+    <height>910</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -41,7 +41,7 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QVBoxLayout" name="conSavLogVert" stretch="1,3,6,0">
+      <layout class="QVBoxLayout" name="conSavLogVert" stretch="1,3,0">
        <property name="sizeConstraint">
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
@@ -127,17 +127,47 @@
             <property name="sizeConstraint">
              <enum>QLayout::SetMaximumSize</enum>
             </property>
+            <item row="4" column="1">
+             <widget class="QLineEdit" name="logDirLine"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="dataNameLab">
+              <property name="text">
+               <string>Experiment name</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="logNameLab">
+              <property name="text">
+               <string>Log file name</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="dataNameLine"/>
+            </item>
+            <item row="8" column="0" colspan="2">
+             <widget class="Line" name="line_4">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QPushButton" name="logDirBtn">
+              <property name="text">
+               <string>Browse</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="dataDirLine"/>
+            </item>
             <item row="1" column="1">
              <widget class="QPushButton" name="dataDirBtn">
               <property name="text">
                <string>Browse...</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QPushButton" name="logDirBtn">
-              <property name="text">
-               <string>Browse</string>
               </property>
              </widget>
             </item>
@@ -148,38 +178,8 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="logDirLab">
-              <property name="text">
-               <string>Log directory</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="dataDirLine"/>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="logNameLab">
-              <property name="text">
-               <string>Log file name</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QLineEdit" name="logDirLine"/>
-            </item>
-            <item row="6" column="1">
+            <item row="7" column="1">
              <widget class="QLineEdit" name="logNameLine"/>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="dataNameLab">
-              <property name="text">
-               <string>Experiment name</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLineEdit" name="dataNameLine"/>
             </item>
             <item row="3" column="0" colspan="2">
              <widget class="Line" name="line_3">
@@ -188,26 +188,26 @@
               </property>
              </widget>
             </item>
-            <item row="7" column="0" colspan="2">
-             <widget class="Line" name="line_4">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+            <item row="4" column="0">
+             <widget class="QLabel" name="logDirLab">
+              <property name="text">
+               <string>Log directory</string>
               </property>
              </widget>
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QTextEdit" name="logText">
+            <property name="maximumSize">
+             <size>
+              <width>300</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
          </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QTextEdit" name="logText">
-         <property name="maximumSize">
-          <size>
-           <width>300</width>
-           <height>16777215</height>
-          </size>
-         </property>
         </widget>
        </item>
        <item>
@@ -235,7 +235,7 @@
     <item>
      <layout class="QVBoxLayout" name="sysCtrlVert" stretch="7,0">
       <item>
-       <layout class="QHBoxLayout" name="plotNfbHor" stretch="0,2">
+       <layout class="QHBoxLayout" name="plotNfbHor" stretch="5,1">
         <item>
          <widget class="QTabWidget" name="plotTabs">
           <property name="currentIndex">
@@ -416,13 +416,13 @@
          <widget class="QFrame" name="fbFrame">
           <property name="minimumSize">
            <size>
-            <width>150</width>
+            <width>420</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>200</width>
+            <width>420</width>
             <height>16777215</height>
            </size>
           </property>
@@ -440,13 +440,13 @@
             <widget class="QToolBox" name="fbToolBox">
              <property name="minimumSize">
               <size>
-               <width>150</width>
+               <width>420</width>
                <height>0</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>200</width>
+               <width>420</width>
                <height>16777215</height>
               </size>
              </property>
@@ -458,50 +458,19 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>180</width>
-                <height>396</height>
+                <width>420</width>
+                <height>458</height>
                </rect>
               </property>
               <attribute name="label">
                <string>PI controller parameters</string>
               </attribute>
-              <layout class="QGridLayout" name="piGrid" columnstretch="1,0,0">
-               <item row="3" column="2">
-                <widget class="QDoubleSpinBox" name="xyINumDbl"/>
-               </item>
-               <item row="4" column="0" colspan="3">
-                <widget class="Line" name="line_2">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="zLab">
-                 <property name="text">
-                  <string>Z</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="2">
-                <widget class="QDoubleSpinBox" name="xyPNumDbl"/>
-               </item>
+              <layout class="QGridLayout" name="piGrid" columnstretch="1,9,7,18">
                <item row="7" column="1">
                 <widget class="QDial" name="zIDial"/>
                </item>
-               <item row="0" column="1">
-                <widget class="QCheckBox" name="xyFbOnCheck">
-                 <property name="text">
-                  <string>FB ON</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="8" column="0" colspan="3">
-                <widget class="QPushButton" name="setFbBtn">
-                 <property name="text">
-                  <string>SET PI PARAMETERS</string>
-                 </property>
-                </widget>
+               <item row="3" column="1">
+                <widget class="QDial" name="xyIDial"/>
                </item>
                <item row="6" column="0">
                 <widget class="QLabel" name="zPLab">
@@ -510,29 +479,64 @@
                  </property>
                 </widget>
                </item>
-               <item row="3" column="1">
-                <widget class="QDial" name="xyIDial"/>
-               </item>
-               <item row="6" column="1">
-                <widget class="QDial" name="zPDial"/>
+               <item row="1" column="3" rowspan="3">
+                <widget class="QFrame" name="yPiFrame">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QGridLayout" name="yPiGrid">
+                  <item row="0" column="1">
+                   <widget class="QDial" name="yOptPDial"/>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="yOptPLab">
+                    <property name="text">
+                     <string>P</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="yOptILab">
+                    <property name="text">
+                     <string>I</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QDial" name="yOptIDial"/>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QDoubleSpinBox" name="yOptPNumDbl"/>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QDoubleSpinBox" name="yOptINumDbl"/>
+                  </item>
+                 </layout>
+                </widget>
                </item>
                <item row="1" column="1">
                 <widget class="QDial" name="xyPDial"/>
                </item>
-               <item row="7" column="0">
-                <widget class="QLabel" name="zILab">
+               <item row="5" column="0">
+                <widget class="QLabel" name="zLab">
                  <property name="text">
-                  <string>I</string>
+                  <string>Z</string>
                  </property>
                 </widget>
                </item>
-               <item row="6" column="2">
-                <widget class="QDoubleSpinBox" name="zPNumDbl"/>
+               <item row="3" column="2">
+                <widget class="QDoubleSpinBox" name="xyINumDbl"/>
                </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="xyLab">
+               <item row="1" column="0">
+                <widget class="QLabel" name="xyPLab">
                  <property name="text">
-                  <string>X-Y</string>
+                  <string>P</string>
                  </property>
                 </widget>
                </item>
@@ -543,20 +547,73 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="xyPLab">
+               <item row="5" column="1">
+                <widget class="QCheckBox" name="zFbOnCheck">
+                 <property name="layoutDirection">
+                  <enum>Qt::RightToLeft</enum>
+                 </property>
                  <property name="text">
-                  <string>P</string>
+                  <string>FB ON</string>
                  </property>
                 </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QDial" name="zPDial"/>
+               </item>
+               <item row="6" column="2">
+                <widget class="QDoubleSpinBox" name="zPNumDbl"/>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="zILab">
+                 <property name="text">
+                  <string>I</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0" colspan="4">
+                <widget class="Line" name="line_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QDoubleSpinBox" name="xyPNumDbl"/>
                </item>
                <item row="7" column="2">
                 <widget class="QDoubleSpinBox" name="zINumDbl"/>
                </item>
-               <item row="5" column="1">
-                <widget class="QCheckBox" name="zFbOnCheck">
+               <item row="8" column="0" colspan="4">
+                <widget class="QPushButton" name="setFbBtn">
+                 <property name="text">
+                  <string>SET PI PARAMETERS</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QCheckBox" name="u">
+                 <property name="text">
+                  <string>Y</string>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="xyFbOnCheck">
+                 <property name="layoutDirection">
+                  <enum>Qt::RightToLeft</enum>
+                 </property>
                  <property name="text">
                   <string>FB ON</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="xyLab">
+                 <property name="text">
+                  <string>X-Y</string>
                  </property>
                 </widget>
                </item>
@@ -567,113 +624,470 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>180</width>
-                <height>396</height>
+                <width>403</width>
+                <height>464</height>
                </rect>
               </property>
               <attribute name="label">
                <string>Optical trap control pad</string>
               </attribute>
-              <layout class="QVBoxLayout" name="padVert" stretch="2,2">
+              <layout class="QVBoxLayout" name="padVert" stretch="5,0,0">
                <item>
-                <widget class="PlotWidget" name="trapPadPlot">
-                 <property name="maximumSize">
+                <widget class="QFrame" name="padFrame">
+                 <property name="minimumSize">
                   <size>
-                   <width>180</width>
-                   <height>180</height>
+                   <width>380</width>
+                   <height>295</height>
                   </size>
                  </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>380</width>
+                   <height>295</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="padHor">
+                  <item>
+                   <layout class="QGridLayout" name="trapXyPlotGrid">
+                    <item row="0" column="1">
+                     <widget class="QPushButton" name="yPlusTrapBtn">
+                      <property name="minimumSize">
+                       <size>
+                        <width>190</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>190</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>▲</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QPushButton" name="xMinusTrapBtn">
+                      <property name="minimumSize">
+                       <size>
+                        <width>30</width>
+                        <height>190</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>30</width>
+                        <height>200</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>◄</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="2">
+                     <widget class="QPushButton" name="xPlusTrapBtn">
+                      <property name="minimumSize">
+                       <size>
+                        <width>30</width>
+                        <height>190</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>30</width>
+                        <height>190</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>►</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="PlotWidget" name="trapPadPlot">
+                      <property name="minimumSize">
+                       <size>
+                        <width>190</width>
+                        <height>190</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>190</width>
+                        <height>190</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="1">
+                     <widget class="QPushButton" name="yMinusTrapBtn">
+                      <property name="minimumSize">
+                       <size>
+                        <width>190</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>200</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>▼</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="trapZHomeVert" stretch="0,2,1,2,1,1,2,0">
+                    <item>
+                     <spacer name="verticalSpacer_5">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_3">
+                      <item>
+                       <widget class="QPushButton" name="zPlusTrapBtn">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>60</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>60</width>
+                          <height>60</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string>▲</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_4">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_4">
+                      <item>
+                       <widget class="QPushButton" name="zMinusTrapBtn">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>60</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>60</width>
+                          <height>60</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string>▼</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_3">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="Line" name="line_5">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="homeHor">
+                      <item>
+                       <widget class="Line" name="line_6">
+                        <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QPushButton" name="goHomeBtn">
+                        <property name="minimumSize">
+                         <size>
+                          <width>60</width>
+                          <height>60</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>60</width>
+                          <height>60</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string>⌂ HOME</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="Line" name="line_7">
+                        <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <widget class="Line" name="line_8">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
                 </widget>
                </item>
                <item>
-                <layout class="QGridLayout" name="trapPadSpeedGrid" rowstretch="1,0,1,0,0,0,0,0" columnstretch="2,0">
-                 <item row="3" column="0">
-                  <widget class="QSlider" name="ySpeedTrapPadSlider">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                  </widget>
+                <layout class="QHBoxLayout" name="stepNspeedHor" stretch="4,1,4">
+                 <item>
+                  <layout class="QGridLayout" name="trapPadStepGrid" rowstretch="1,2,2,2,4" columnstretch="1,3,4">
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="xStepLab_3">
+                     <property name="text">
+                      <string>Z</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="xStepLab">
+                     <property name="text">
+                      <string>X</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="xSpeedTrapPadNumDbl_2"/>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="xStepLab_2">
+                     <property name="text">
+                      <string>Y</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="xSpeedTrapPadNumDbl_3"/>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QLineEdit" name="xTrapPosLine">
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="xSpeedTrapPadNumDbl_4"/>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QLabel" name="stepLab">
+                     <property name="text">
+                      <string>Step ampl [nm]</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QLineEdit" name="yTrapPosLine">
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QLabel" name="currPosLab">
+                     <property name="text">
+                      <string>Curr. pos. [nm]</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QLineEdit" name="TrapPosLine">
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QPushButton" name="setHomeBtn">
+                     <property name="minimumSize">
+                      <size>
+                       <width>60</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>1000</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>Set Home</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="xSpeedTrapPadLab">
-                   <property name="text">
-                    <string>X speed [nm/s]</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="0">
-                  <spacer name="verticalSpacer_10">
+                 <item>
+                  <widget class="Line" name="line_9">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="ySpeedTrapPadLab">
-                   <property name="text">
-                    <string>Y speed [nm/s]</string>
-                   </property>
                   </widget>
                  </item>
-                 <item row="3" column="1">
-                  <widget class="QDoubleSpinBox" name="ySpeedTrapPadNumDbl"/>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QDoubleSpinBox" name="xSpeedTrapPadNumDbl"/>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QSlider" name="xSpeedTrapPadSlider">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="0">
-                  <spacer name="verticalSpacer_4">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item row="4" column="0">
-                  <spacer name="verticalSpacer_3">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item row="7" column="0">
-                  <spacer name="verticalSpacer_5">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
+                 <item>
+                  <layout class="QGridLayout" name="trapPadSpeedGrid" rowstretch="1,0,0,0,0,0" columnstretch="3,2">
+                   <item row="1" column="0">
+                    <widget class="QSlider" name="xSpeedTrapPadSlider">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="ySpeedTrapPadLab">
+                     <property name="text">
+                      <string>Y speed [nm/s]</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="xSpeedTrapPadNumDbl">
+                     <property name="decimals">
+                      <number>0</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QSlider" name="ySpeedTrapPadSlider">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="ySpeedTrapPadNumDbl">
+                     <property name="decimals">
+                      <number>0</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="zSpeedTrapPadLab">
+                     <property name="text">
+                      <string>Z speed [nm/s]</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="xSpeedTrapPadLab">
+                     <property name="text">
+                      <string>X speed [nm/s]</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
+                    <widget class="QSlider" name="zSpeedTrapPadSlider">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QDoubleSpinBox" name="zSpeedTrapPadNumDbl">
+                     <property name="decimals">
+                      <number>0</number>
+                     </property>
+                     <property name="maximum">
+                      <double>5000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </item>
                 </layout>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_9">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
               </layout>
              </widget>
@@ -682,28 +1096,32 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>180</width>
-                <height>396</height>
+                <width>420</width>
+                <height>458</height>
                </rect>
               </property>
               <attribute name="label">
                <string>Other parameters</string>
               </attribute>
-              <layout class="QGridLayout" name="otherGrid">
-               <item row="1" column="2">
-                <widget class="QDoubleSpinBox" name="yOffSetNumDbl"/>
+              <layout class="QGridLayout" name="otherGrid" columnstretch="1,9,7,10" rowminimumheight="1,9,7,0">
+               <item row="2" column="2">
+                <widget class="QDoubleSpinBox" name="zOffSetNumDbl"/>
                </item>
                <item row="1" column="1">
                 <widget class="QDial" name="yOffSetDial"/>
                </item>
-               <item row="0" column="1">
-                <widget class="QDial" name="xOffSetDial"/>
+               <item row="1" column="2">
+                <widget class="QDoubleSpinBox" name="yOffSetNumDbl"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="yOffSetLab">
+                 <property name="text">
+                  <string>Y offset</string>
+                 </property>
+                </widget>
                </item>
                <item row="0" column="2">
                 <widget class="QDoubleSpinBox" name="xOffSetNumDbl"/>
-               </item>
-               <item row="2" column="2">
-                <widget class="QDoubleSpinBox" name="zOffSetNumDbl"/>
                </item>
                <item row="2" column="0">
                 <widget class="QLabel" name="zOffSetLab">
@@ -715,12 +1133,8 @@
                <item row="2" column="1">
                 <widget class="QDial" name="zOffSetDial"/>
                </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="yOffSetLab">
-                 <property name="text">
-                  <string>Y offset</string>
-                 </property>
-                </widget>
+               <item row="0" column="1">
+                <widget class="QDial" name="xOffSetDial"/>
                </item>
                <item row="0" column="0">
                 <widget class="QLabel" name="xOffSetLab">
@@ -728,6 +1142,32 @@
                   <string>X offset</string>
                  </property>
                 </widget>
+               </item>
+               <item row="1" column="3">
+                <spacer name="horizontalSpacer_11">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="3" column="1">
+                <spacer name="verticalSpacer_8">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
               </layout>
              </widget>
@@ -739,7 +1179,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="posNmodHor" stretch="0,1,15">
+       <layout class="QHBoxLayout" name="posNmodHor" stretch="0,1,0">
         <item>
          <widget class="PlotWidget" name="trapPosXYPlot">
           <property name="enabled">
@@ -1228,10 +1668,18 @@
                </widget>
               </item>
               <item row="2" column="2">
-               <widget class="QLineEdit" name="stdExpYEqForceVsMaxLine"/>
+               <widget class="QLineEdit" name="stdExpYEqForceVsMaxLine">
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
               </item>
               <item row="1" column="2">
-               <widget class="QLineEdit" name="stdExpXEqForceVsMaxLine"/>
+               <widget class="QLineEdit" name="stdExpXEqForceVsMaxLine">
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
               </item>
               <item row="2" column="1">
                <widget class="QDoubleSpinBox" name="stdExpYSetPntNumDbl"/>
@@ -1257,7 +1705,11 @@
                </widget>
               </item>
               <item row="3" column="2">
-               <widget class="QLineEdit" name="stdExpZEqForceVsMaxLine"/>
+               <widget class="QLineEdit" name="stdExpZEqForceVsMaxLine">
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
               </item>
               <item row="5" column="1">
                <widget class="QLabel" name="stdExpDurLab">
@@ -1521,7 +1973,11 @@
                    <widget class="QComboBox" name="customExpXWFCmb"/>
                   </item>
                   <item row="1" column="3">
-                   <widget class="QLineEdit" name="customExpXEqForceVsMaxLine"/>
+                   <widget class="QLineEdit" name="customExpXEqForceVsMaxLine">
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
                   </item>
                   <item row="0" column="3">
                    <widget class="QLabel" name="customExpXEqForceVsMaxLab">
@@ -1671,7 +2127,11 @@
                    <widget class="QComboBox" name="customExpYWFCmb"/>
                   </item>
                   <item row="1" column="3">
-                   <widget class="QLineEdit" name="customExpYEqForceVsMaxLine"/>
+                   <widget class="QLineEdit" name="customExpYEqForceVsMaxLine">
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
                   </item>
                   <item row="0" column="3">
                    <widget class="QLabel" name="customExpYEqForceVsMaxLab">
@@ -1821,7 +2281,11 @@
                    <widget class="QComboBox" name="customExpZWFCmb"/>
                   </item>
                   <item row="1" column="3">
-                   <widget class="QLineEdit" name="customExpZEqForceVsMaxLine"/>
+                   <widget class="QLineEdit" name="customExpZEqForceVsMaxLine">
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
                   </item>
                   <item row="0" column="3">
                    <widget class="QLabel" name="customExpZEqForceVsMaxLab">
@@ -1861,7 +2325,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1157</width>
+     <width>1401</width>
      <height>21</height>
     </rect>
    </property>

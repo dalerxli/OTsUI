@@ -1,6 +1,6 @@
-from GUIs.OTsUI_main import *
-from pyqtgraph import PlotWidget, AxisItem, setConfigOption
-from PyQt5.Qt import QStyle, QFileDialog
+from GUIs.OTsUI_MainGUI import *
+from pyqtgraph import setConfigOption
+from PyQt5.Qt import QFileDialog
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
 import PyQt5
 import configparser as cfg
@@ -8,7 +8,7 @@ import numpy as np
 from scipy.signal import welch
 from os import sep
 from os.path import splitext
-from GUIs.configUI_deriv import configDial
+from GUIs.OTsUI_configUI_Engine import configDial
 
 try:
     import epz as tempEpz
@@ -51,9 +51,12 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.logDir = ''
         self.dataDir = ''
         self.parDir = ''
+        self.xData = None
 
         self.powSpecConnected = False
         self.signalConnected = False
+
+        self.c = 0
 
         # epz objects
 
@@ -92,6 +95,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.cmbBoxConnections()
         self.pathConnections()
         self.actionConnections()
+        self.buttonConnections()
 
 
     def createConfigDict(self,parser):
@@ -384,7 +388,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         equalValCmb.setCurrentIndex(elements[0])
         equalValCmb.blockSignals(False)
 
-        self.linkPlotToData((sendCmb is self.sig1selCmb or sendCmb is self.sig1selCmb or sendCmb is self.sig1selCmb))
+        if self.xData != None:
+            self.linkPlotToData((sendCmb is self.sig1selCmb or sendCmb is self.sig1selCmb or sendCmb is self.sig1selCmb))
         
     
     def setScaledValue(self,rec):
@@ -400,11 +405,16 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         displayLine.setText(str(QFileDialog.getExistingDirectory(self, "Select Directory")))
         
     
-    def updateDirObj(self,dir):
+    def updateDirObj(self):
         
         culprit = self.sender()
-        dir = culprit.text()
-        dir=dir.replace('/',sep)
+        folder = culprit.text()
+        folder=folder.replace('/',sep)
+        if culprit == self.logDirLine:
+            self.logDir = folder
+        else:
+            self.dataDir = folder
+
 
 
     def showDial(self):
@@ -414,6 +424,40 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         if culprit is self.action_Config_File:
             self.cfgDial = configDial(self.cfgFile,self)
             self.cfgDial.exec_()
+
+
+    def closeEvent(self, event):
+        print('logdir: '+self.logDir)
+        reply = QMessageBox.question(self, 'Message',
+            "Do you really want to close OTsUI?", QMessageBox.Yes, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            if self.xData is None:
+                event.accept()
+                return None
+            self.xInterpreter.stopDev()
+            self.yInterpreter.stopDev()
+            self.zInterpreter.stopDev()
+
+            reply = QMessageBox.question(self, 'Message',
+                                               "Do you want to kill the devices (If you say yes, you'll have to turn the towers off and then on before using CoMPlEx again)?",
+                                               QMessageBox.Yes, QMessageBox.No)
+            if reply == QMessageBox.Yes:
+                self.xInterpreter.killDev()
+                self.yInterpreter.killDev()
+                self.zInterpreter.killDev()
+                self.xyCmd.send('K')
+
+            event.accept()
+        else:
+            event.ignore()
+
+
+    def count(self):
+
+        while self.yPlusTrapBtn.isDown():
+            self.c+=1
+            print(self.c)
 
 
     def numConnections(self):
@@ -484,8 +528,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
         self.logDirBtn.clicked.connect(lambda: self.selectDir(self.logDirLine))
         self.dataDirBtn.clicked.connect(lambda: self.selectDir(self.dataDirLine))
-        self.logDirLine.textChanged.connect(lambda: self.updateDirObj(self.logDir))
-        self.dataDirLine.textChanged.connect(lambda: self.updateDirObj(self.dataDir))
+        self.logDirLine.textChanged.connect(self.updateDirObj)
+        self.dataDirLine.textChanged.connect(self.updateDirObj)
 
         #################################################################################
 
@@ -495,6 +539,12 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.action_Config_File.triggered.connect(self.showDial)
         self.action_Save_Parameters.triggered.connect(self.saveParams)
         self.action_Load_Parameters.triggered.connect(self.loadParams)
+        self.action_Exit.triggered.connect(self.close)
+
+
+    def buttonConnections(self):
+
+        self.yPlusTrapBtn.pressed.connect(self.count)
 
         
     

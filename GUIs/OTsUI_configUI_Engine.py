@@ -1,10 +1,7 @@
-from GUIs.configUI_dialog import *
-from pyqtgraph import PlotWidget, AxisItem, setConfigOption
+from GUIs.OTsUI_configUI_Dialog import *
 from PyQt5.Qt import QStyle, QFileDialog
 from PyQt5.QtWidgets import QDialog, QMessageBox
-import PyQt5
 import configparser as cfg
-from os import sep
 from os.path import splitext
 from libs.usefulVar import nameTypeDict, gettingSettingSignalDict
 
