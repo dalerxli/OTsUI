@@ -1,8 +1,7 @@
 from GUIs.OTsUI_MainGUI import *
 from pyqtgraph import setConfigOption
-from PyQt5.Qt import QFileDialog
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
-import PyQt5
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog, QSlider, QDial, QDoubleSpinBox, QSpinBox, QCheckBox, QLineEdit, QComboBox, QPushButton
+from PyQt5.QtCore import QThread
 import configparser as cfg
 import numpy as np
 from scipy.signal import welch
@@ -14,20 +13,20 @@ try:
     import epz as tempEpz
     import inspect
     _,_,keys,_ = inspect.getargspec(tempEpz.CMD.__init__())
+    print(keys)
     if 'tag' not in keys:
         import libs.epz as tempEpz
     epz = tempEpz
 except:
-    from libs import epz
+    import libs.epz as epz
 
-from libs.otsui2epz import Interpreter
+from libs.epzInterpreter import Interpreter
 from libs.usefulVar import pens
 
 setConfigOption('background', 'w')
 setConfigOption('foreground', (100,100,100))
 
 INCR = 0.01
-
 DEC = 100
 CHUNK = 1000
 NOTLEN = 1000
@@ -56,11 +55,20 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.powSpecConnected = False
         self.signalConnected = False
 
+        self.trapHomePos = [0.0,0.0,0.0]
+
         self.c = 0
 
         # epz objects
 
         self.otsuiEnv = epz.Environment()
+
+        self.padBtnFuncDict = {self.yPlusTrapBtn: [self.incrementTrapY,0],
+                               self.xPlusTrapBtn: [self.incrementTrapX,0],
+                               self.zPlusTrapBtn: [self.incrementTrapZ,0],
+                               self.yMinusTrapBtn: [self.decrementTrapY,1],
+                               self.xMinusTrapBtn: [self.decrementTrapX,1],
+                               self.zMinusTrapBtn: [self.decrementTrapZ,1]}
 
         #######################################################################
 
@@ -123,6 +131,14 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.XVToNm = lambda x: ((x-configDict['ZAXIS']['vgalvmin'])/(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin']))*(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin'])+configDict['ZAXIS']['nmgalvmin']
         self.zNmToV = lambda x: ((x-configDict['ZAXIS']['nmgalvmin'])/(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin']))*(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin'])+configDict['ZAXIS']['vgalvmin']
 
+        self.xVToNmRel = lambda x: (x/(configDict['XAXIS']['vgalvmax']-configDict['XAXIS']['vgalvmin']))*(configDict['XAXIS']['nmgalvmax']-configDict['XAXIS']['nmgalvmin'])
+        self.xNmToVRel = lambda x: (x/(configDict['XAXIS']['nmgalvmax']-configDict['XAXIS']['nmgalvmin']))*(configDict['XAXIS']['vgalvmax']-configDict['XAXIS']['vgalvmin'])
+        self.yVToNmRel = lambda x: (x/(configDict['YAXIS']['vgalvmax']-configDict['YAXIS']['vgalvmin']))*(configDict['YAXIS']['nmgalvmax']-configDict['YAXIS']['nmgalvmin'])
+        self.yNmToVRel = lambda x: (x/(configDict['YAXIS']['nmgalvmax']-configDict['YAXIS']['nmgalvmin']))*(configDict['YAXIS']['vgalvmax']-configDict['YAXIS']['vgalvmin'])
+        self.XVToNmRel = lambda x: (x/(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin']))*(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin'])
+        self.zNmToVRel = lambda x: (x/(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin']))*(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin'])
+
+
         configGroupDictX = {'nmgalvmax': [[self.activeCalXAmplNumDbl], ['nmgalvmin']],
                             'qpdmax': [[self.stdExpXSetPntNumDbl,
                                         self.customExpXAmplNumDbl], ['qpdmin']],
@@ -153,11 +169,15 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.xDevName = configDict['XAXIS']['devname']
         self.yDevName = configDict['YAXIS']['devname']
         self.zDevName = configDict['ZAXIS']['devname']
+        self.otsuiEnv.epserver = self.ipAddLine.text()
+        self.otsuiEnv.pubport = self.pubPortLine.text()
+        self.otsuiEnv.subport = self.subPortLine.text()
+        self.otsuiEnv.device = self.xDevName
 
         for s in configNumDict.keys():
             for o in configNumDict[s].keys():
                 for el in configNumDict[s][o][0]:
-                    scale = (1/INCR) if (type(el) == PyQt5.QtWidgets.QDial or type(el) == PyQt5.QtWidgets.QSlider) else 1
+                    scale = (1/INCR) if (type(el) == QDial or type(el) == QSlider) else 1
                     max = float(configDict[s][o])
                     minKey = configNumDict[s][o][1][0]
                     min = float(configDict[s][minKey]) if (minKey != '0' and minKey != 'INCR') else eval(minKey)
@@ -178,22 +198,25 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.xData.notifyLength = NOTLEN
         self.xData.notify = True
         self.xData.yDataReceived.connect(self.trapTrack)
-        self.xData = epz.QtDATA(self.otsuiEnv,self.yDevName)
+        self.xData.zDataReceived.connect(self.qpdTrack)
+        self.yData = epz.QtDATA(self.otsuiEnv,self.yDevName)
         self.yData.decimate = DEC
         self.yData.chunk = CHUNK
         self.yData.notifyLength = NOTLEN
         self.yData.notify = True
         self.yData.yDataReceived.connect(self.trapTrack)
+        self.yData.zDataReceived.connect(self.qpdTrack)
         self.zData = epz.QtDATA(self.otsuiEnv,self.zDevName)
         self.zData.decimate = DEC
         self.zData.chunk = CHUNK
         self.zData.notifyLength = NOTLEN
         self.zData.notify = True
         self.zData.yDataReceived.connect(self.trapTrack)
+        self.zData.zDataReceived.connect(self.qpdTrack)
 
-
-    def startEpz(self):
-
+        self.xInterpreter.circulaBufferOn()
+        self.yInterpreter.circulaBufferOn()
+        self.zInterpreter.circulaBufferOn()
         self.xInterpreter.startDev()
         self.yInterpreter.startDev()
         self.zInterpreter.startDev()
@@ -226,12 +249,22 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
             self.powSpecConnected = True
 
 
+    def trapTrack(self):
+
+        pass
+
+
+    def qpdTrack(self):
+
+        pass
+
+
     def sig1Update(self,v):
 
         self.sig1Plot.plotItem.clear()
         S = list([self.sx,self.sy,self.sz])[self.sig1selCmb.currentIndex()]
         k = list([self.kx,self.ky,self.kz])[self.sig1selCmb.currentIndex()]
-        plottableY = np.array(v[1])*S*k
+        plottableY = np.array(v[2])*S*k
         plottableX = np.array(v[0])-v[0][0]
         self.sig1Plot.plotItem.plot(plottableX,plottableY,pen=pens[0])
 
@@ -241,7 +274,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.sig2Plot.plotItem.clear()
         S = list([self.sx,self.sy,self.sz])[self.sig2selCmb.currentIndex()]
         k = list([self.kx,self.ky,self.kz])[self.sig2selCmb.currentIndex()]
-        plottableY = np.array(v[1])*S*k
+        plottableY = np.array(v[2])*S*k
         plottableX = np.array(v[0])-v[0][0]
         self.sig1P2ot.plotItem.plot(plottableX,plottableY,pen=pens[1])
 
@@ -251,7 +284,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.sig3Plot.plotItem.clear()
         S = list([self.sx,self.sy,self.sz])[self.sig3selCmb.currentIndex()]
         k = list([self.kx,self.ky,self.kz])[self.sig3selCmb.currentIndex()]
-        plottableY = np.array(v[1])*S*k
+        plottableY = np.array(v[2])*S*k
         plottableX = np.array(v[0])-v[0][0]
         self.sig3Plot.plotItem.plot(plottableX,plottableY,pen=pens[2])
 
@@ -261,7 +294,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.powSpec1Plot.plotItem.clear()
         S = list([self.sx,self.sy,self.sz])[self.ps1selCmb.currentIndex()]
         k = list([self.kx,self.ky,self.kz])[self.ps1selCmb.currentIndex()]
-        tempY = np.array(v[1])*S*k
+        tempY = np.array(v[2])*S*k
         sampF = 1.0/np.mean(np.array(v[0])[1:]-np.array(v[0])[:-1])
         plottableX,plottableY = welch(tempY,sampF)
         self.powSpec1Plot.plotItem.plot(plottableX,plottableY,pen=pens[0])
@@ -291,9 +324,9 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
     def getParamsDict(self):
 
-        baseDict = {PyQt5.QtWidgets.QSpinBox:['NUM','.value()','.setValue(',[]],PyQt5.QtWidgets.QDoubleSpinBox:['DBL','.value()','.setValue(',[]],
-                    PyQt5.QtWidgets.QLineEdit:['LINE','.text()','.setText(',[]],PyQt5.QtWidgets.QCheckBox:['CKBOX','.isChecked()','.setChecked(',[]],
-                    PyQt5.QtWidgets.QComboBox:['CMBBOX','.currentIndex()','.setCurrentIndex(',[]]}
+        baseDict = {QSpinBox:['NUM','.value()','.setValue(',[]],QDoubleSpinBox:['DBL','.value()','.setValue(',[]],
+                    QLineEdit:['LINE','.text()','.setText(',[]],QCheckBox:['CKBOX','.isChecked()','.setChecked(',[]],
+                    QComboBox:['CMBBOX','.currentIndex()','.setCurrentIndex(',[]]}
 
         for d in dir(self):
             dObj = getattr(self, d)
@@ -367,7 +400,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def configNum(self,numName,cfgName,cfgKey):
         
         culprit = getattr(self, numName)
-        scale = (1/INCR) if (type(culprit) == PyQt5.QtWidgets.QDial or type(culprit) == PyQt5.QtWidgets.QSlider) else 1
+        scale = (1/INCR) if (type(culprit) == QDial or type(culprit) == QSlider) else 1
         getattr(self, numName).setMaximum(float(self.cfgParse[cfgKey][cfgName+'MAX'])*scale)
         getattr(self, numName).setMinimum(float(self.cfgParse[cfgKey][cfgName+'MIN'])*scale)
         getattr(self, numName).setSingleStep(INCR*scale)
@@ -377,7 +410,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def changeCmbGrMem(self):
         sendCmb = self.sender()
         fatherCmb = sendCmb.parentWidget()
-        listCmbChild = [c for c in fatherCmb.children() if (type(c)==PyQt5.QtWidgets.QComboBox and c is not sendCmb)]
+        listCmbChild = [c for c in fatherCmb.children() if (type(c)==QComboBox and c is not sendCmb)]
         equalValCmb = [l for l in listCmbChild if l.currentIndex()==sendCmb.currentIndex()][0]
         elements = list(range(sendCmb.count()))
         elements.remove(sendCmb.currentIndex())
@@ -394,7 +427,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     
     def setScaledValue(self,rec):
         culprit = self.sender()
-        scale = rec.singleStep() if (type(culprit) == PyQt5.QtWidgets.QDial or type(culprit) == PyQt5.QtWidgets.QSlider) else 1/culprit.singleStep()
+        scale = rec.singleStep() if (type(culprit) == QDial or type(culprit) == QSlider) else 1/culprit.singleStep()
         rec.blockSignals(True)
         rec.setValue(culprit.value()*scale)
         rec.blockSignals(False)
@@ -435,6 +468,9 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
             if self.xData is None:
                 event.accept()
                 return None
+            self.xInterpreter.circulaBufferOff()
+            self.yInterpreter.circulaBufferOff()
+            self.zInterpreter.circulaBufferOff()
             self.xInterpreter.stopDev()
             self.yInterpreter.stopDev()
             self.zInterpreter.stopDev()
@@ -446,18 +482,64 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
                 self.xInterpreter.killDev()
                 self.yInterpreter.killDev()
                 self.zInterpreter.killDev()
-                self.xyCmd.send('K')
 
             event.accept()
         else:
             event.ignore()
 
 
+    def trapPadControl(self):
+
+        culprit = self.sender()
+
+
+
     def count(self):
 
-        while self.yPlusTrapBtn.isDown():
-            self.c+=1
-            print(self.c)
+        self.c += 1
+        print(self.c)
+
+
+    def incrementTrapY(self):
+
+        if self.yTrapPosNumDbl.value() >= self.yTrapPadStepNumDbl.maximum():
+            return None
+        self.yInterpreter.setDAC(self.yTrapPosNumDbl.value()+self.yTrapPadStepNumDbl.value())
+
+
+    def decrementTrapY(self):
+
+        if self.yTrapPosNumDbl.value() <= self.yTrapPadStepNumDbl.minimum():
+            return None
+        self.yInterpreter.setDAC(self.yTrapPosNumDbl.value()-self.yTrapPadStepNumDbl.value())
+
+
+    def incrementTrapX(self):
+
+        if self.xTrapPosNumDbl.value() >= self.xTrapPadStepNumDbl.maximum():
+            return None
+        self.xInterpreter.setDAC(self.xTrapPosNumDbl.value()+self.xTrapPadStepNumDbl.value())
+
+
+    def decrementTrapX(self):
+
+        if self.xTrapPosNumDbl.value() <= self.xTrapPadStepNumDbl.minimum():
+            return None
+        self.xInterpreter.setDAC(self.yTrapPosNumDbl.value()-self.yTrapPadStepNumDbl.value())
+
+
+    def incrementTrapZ(self):
+
+        if self.zTrapPosNumDbl.value() >= self.zTrapPadStepNumDbl.maximum():
+            return None
+        self.zInterpreter.setDAC(self.zTrapPosNumDbl.value()+self.zTrapPadStepNumDbl.value())
+
+
+    def decrementTrapZ(self):
+
+        if self.zTrapPosNumDbl.value() <= self.zTrapPadStepNumDbl.maximum():
+            return None
+        self.zInterpreter.setDAC(self.zTrapPosNumDbl.value()+self.zTrapPadStepNumDbl.value())
 
 
     def numConnections(self):
@@ -544,7 +626,28 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
     def buttonConnections(self):
 
-        self.yPlusTrapBtn.pressed.connect(self.count)
+        self.xPlusTrapBtn.pressed.connect(self.trapPadControl)
+        self.yPlusTrapBtn.pressed.connect(self.trapPadControl)
+        self.zPlusTrapBtn.pressed.connect(self.trapPadControl)
+        self.xMinusTrapBtn.pressed.connect(self.trapPadControl)
+        self.yMinusTrapBtn.pressed.connect(self.trapPadControl)
+        self.zMinusTrapBtn.pressed.connect(self.trapPadControl)
+        self.connectBtn.clicked.connect(self.epzConnect)
 
         
-    
+
+class ButtonThread(QThread):
+
+    def __init__(self,button,func):
+
+        if type(button) != QPushButton:
+            raise TypeError('You can only assign a \'QPushButton\' object to \'button\'')
+        self.button = button
+        self.lemma = func
+
+
+    def run(self):
+
+        while self.button.isDown():
+
+            self.lemma()

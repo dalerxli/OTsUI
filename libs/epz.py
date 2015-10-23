@@ -76,6 +76,8 @@ class CMD(object):
 
         self.tag = tag
         self.socket = self.context.socket(zmq.PUB)
+        print(self.pubport)
+        print(environment.epserver)
         self.socket.connect("tcp://{0}:{1}".format(environment.epserver, self.pubport))
 
     def send(self, cmd, values=[]):
@@ -84,7 +86,6 @@ class CMD(object):
             values = [values]
         for v in values:
             msg = msg + ':' + str(v)
-        print(msg)
         self.socket.send_string(msg)
 
 
@@ -209,7 +210,6 @@ class Skeldata(object):
 
             self.tick -= 1
             if self.tick == 0:
-                print(body)
                 self.actOnValue(data)
                 self.tick = self.notifyLength
 
@@ -240,7 +240,10 @@ class CMDREC(SkelCMDREC,threading.Thread):
 
 
 try:
-    from PyQt5.Qt import pyqtSignal, QThread
+    try:
+        from PyQt5.QtCore import pyqtSignal, QThread
+    except:
+        from PyQt4.QtCore import pyqtSignal, QThread
 
 
     class QtDATA(Skeldata, QThread):

@@ -66,7 +66,11 @@
              <enum>QLayout::SetMaximumSize</enum>
             </property>
             <item row="0" column="1">
-             <widget class="QLineEdit" name="ipAddLine"/>
+             <widget class="QLineEdit" name="ipAddLine">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
             <item row="0" column="0">
              <widget class="QLabel" name="ipAddLab">
@@ -76,7 +80,11 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLineEdit" name="pubPortLine"/>
+             <widget class="QLineEdit" name="pubPortLine">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="portLab">
@@ -86,7 +94,11 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLineEdit" name="subPortLine"/>
+             <widget class="QLineEdit" name="subPortLine">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
             <item row="2" column="0">
              <widget class="QLabel" name="portLab_2">
@@ -624,7 +636,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>403</width>
+                <width>398</width>
                 <height>464</height>
                </rect>
               </property>
@@ -917,7 +929,7 @@
                     </widget>
                    </item>
                    <item row="1" column="1">
-                    <widget class="QDoubleSpinBox" name="xSpeedTrapPadNumDbl_2"/>
+                    <widget class="QDoubleSpinBox" name="xTrapPadStepNumDbl"/>
                    </item>
                    <item row="2" column="0">
                     <widget class="QLabel" name="xStepLab_2">
@@ -930,17 +942,10 @@
                     </widget>
                    </item>
                    <item row="2" column="1">
-                    <widget class="QDoubleSpinBox" name="xSpeedTrapPadNumDbl_3"/>
-                   </item>
-                   <item row="1" column="2">
-                    <widget class="QLineEdit" name="xTrapPosLine">
-                     <property name="readOnly">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
+                    <widget class="QDoubleSpinBox" name="yTrapPadStepNumDbl"/>
                    </item>
                    <item row="3" column="1">
-                    <widget class="QDoubleSpinBox" name="xSpeedTrapPadNumDbl_4"/>
+                    <widget class="QDoubleSpinBox" name="zTrapPadStepNumDbl"/>
                    </item>
                    <item row="0" column="1">
                     <widget class="QLabel" name="stepLab">
@@ -952,13 +957,6 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="2">
-                    <widget class="QLineEdit" name="yTrapPosLine">
-                     <property name="readOnly">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="0" column="2">
                     <widget class="QLabel" name="currPosLab">
                      <property name="text">
@@ -966,13 +964,6 @@
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="2">
-                    <widget class="QLineEdit" name="TrapPosLine">
-                     <property name="readOnly">
-                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -995,6 +986,15 @@
                      </property>
                     </widget>
                    </item>
+                   <item row="1" column="2">
+                    <widget class="QDoubleSpinBox" name="xTrapPosNumDbl"/>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QDoubleSpinBox" name="yTrapPosNumDbl"/>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QDoubleSpinBox" name="zTrapPosNumDbl"/>
+                   </item>
                   </layout>
                  </item>
                  <item>
@@ -1008,6 +1008,9 @@
                   <layout class="QGridLayout" name="trapPadSpeedGrid" rowstretch="1,0,0,0,0,0" columnstretch="3,2">
                    <item row="1" column="0">
                     <widget class="QSlider" name="xSpeedTrapPadSlider">
+                     <property name="tracking">
+                      <bool>false</bool>
+                     </property>
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
@@ -1022,6 +1025,9 @@
                    </item>
                    <item row="1" column="1">
                     <widget class="QDoubleSpinBox" name="xSpeedTrapPadNumDbl">
+                     <property name="keyboardTracking">
+                      <bool>false</bool>
+                     </property>
                      <property name="decimals">
                       <number>0</number>
                      </property>
@@ -1029,6 +1035,9 @@
                    </item>
                    <item row="3" column="0">
                     <widget class="QSlider" name="ySpeedTrapPadSlider">
+                     <property name="tracking">
+                      <bool>false</bool>
+                     </property>
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
@@ -1036,6 +1045,9 @@
                    </item>
                    <item row="3" column="1">
                     <widget class="QDoubleSpinBox" name="ySpeedTrapPadNumDbl">
+                     <property name="keyboardTracking">
+                      <bool>false</bool>
+                     </property>
                      <property name="decimals">
                       <number>0</number>
                      </property>
@@ -1057,6 +1069,9 @@
                    </item>
                    <item row="5" column="0">
                     <widget class="QSlider" name="zSpeedTrapPadSlider">
+                     <property name="tracking">
+                      <bool>false</bool>
+                     </property>
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
@@ -1064,6 +1079,9 @@
                    </item>
                    <item row="5" column="1">
                     <widget class="QDoubleSpinBox" name="zSpeedTrapPadNumDbl">
+                     <property name="keyboardTracking">
+                      <bool>false</bool>
+                     </property>
                      <property name="decimals">
                       <number>0</number>
                      </property>
@@ -1096,8 +1114,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>420</width>
-                <height>458</height>
+                <width>173</width>
+                <height>186</height>
                </rect>
               </property>
               <attribute name="label">
@@ -1248,7 +1266,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="calibPage">
            <attribute name="title">
