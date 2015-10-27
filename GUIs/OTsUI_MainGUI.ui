@@ -268,17 +268,32 @@
               </property>
               <item>
                <property name="text">
-                <string>X</string>
+                <string>X QPD</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Y</string>
+                <string>Y QPD</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Z</string>
+                <string>Z QPD</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>X Galv</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Y Galv</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Z Galv</string>
                </property>
               </item>
              </widget>
@@ -293,17 +308,32 @@
               </property>
               <item>
                <property name="text">
-                <string>X</string>
+                <string>X QPD</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Y</string>
+                <string>Y QPD</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Z</string>
+                <string>Z QPD</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>X Galv</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Y Galv</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Z Galv</string>
                </property>
               </item>
              </widget>
@@ -318,17 +348,32 @@
               </property>
               <item>
                <property name="text">
-                <string>X</string>
+                <string>X QPD</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Y</string>
+                <string>Y QPD</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Z</string>
+                <string>Z QPD</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>X Galv</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Y Galv</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Z Galv</string>
                </property>
               </item>
              </widget>
@@ -349,17 +394,32 @@
                <widget class="QComboBox" name="ps1selCmb">
                 <item>
                  <property name="text">
-                  <string>X</string>
+                  <string>X QPD</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Y</string>
+                  <string>Y QPD</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Z</string>
+                  <string>Z QPD</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>X Galv</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Y Galv</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Z Galv</string>
                  </property>
                 </item>
                </widget>
@@ -381,17 +441,32 @@
                 </property>
                 <item>
                  <property name="text">
-                  <string>X</string>
+                  <string>X QPD</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Y</string>
+                  <string>Y QPD</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Z</string>
+                  <string>Z QPD</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>X Galv</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Y Galv</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Z Galv</string>
                  </property>
                 </item>
                </widget>
@@ -399,21 +474,36 @@
               <item row="1" column="1">
                <widget class="QComboBox" name="ps3selCmb">
                 <property name="currentIndex">
-                 <number>2</number>
+                 <number>0</number>
                 </property>
                 <item>
                  <property name="text">
-                  <string>X</string>
+                  <string>X QPD</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Y</string>
+                  <string>Y QPD</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Z</string>
+                  <string>Z QPD</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>X Galv</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Y Galv</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Z Galv</string>
                  </property>
                 </item>
                </widget>
@@ -1135,8 +1225,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>173</width>
-                <height>186</height>
+                <width>420</width>
+                <height>458</height>
                </rect>
               </property>
               <attribute name="label">
@@ -1218,7 +1308,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="posNmodHor" stretch="0,1,0">
+       <layout class="QHBoxLayout" name="posNmodHor" stretch="0,0">
         <item>
          <widget class="PlotWidget" name="trapPosXYPlot">
           <property name="enabled">
@@ -1246,22 +1336,6 @@
            <size>
             <width>0</width>
             <height>0</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="PlotWidget" name="trapPosZPlot">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>280</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>71</width>
-            <height>280</height>
            </size>
           </property>
          </widget>

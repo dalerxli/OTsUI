@@ -58,8 +58,6 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
         self.trapHomePos = [0.0,0.0,0.0]
 
-        self.c = 0
-
         # epz objects
 
         self.otsuiEnv = epz.Environment()
@@ -85,18 +83,12 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.trapPosXYPlot.plotItem.showGrid(True, True, 1)
         self.trapPosXYPlot.setEnabled(True)
         
-        self.trapPosZPlot.plotItem.hideAxis('left')
-        self.trapPosZPlot.plotItem.showAxis('right', show=True)
-        
         #######################################################################
         
         # Set num controls
 
         self.parDict = self.getParamsDict()
         self.applyConfig()
-        
-        #for i in range(len(ctrls)):
-            #self.configNum(ctrls[i], cfgCtrls[i], cfgKeys[i])
             
         #################################################################################
 
@@ -129,14 +121,14 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.xNmToV = lambda x: ((x-configDict['XAXIS']['nmgalvmin'])/(configDict['XAXIS']['nmgalvmax']-configDict['XAXIS']['nmgalvmin']))*(configDict['XAXIS']['vgalvmax']-configDict['XAXIS']['vgalvmin'])+configDict['XAXIS']['vgalvmin']
         self.yVToNm = lambda x: ((x-configDict['YAXIS']['vgalvmin'])/(configDict['YAXIS']['vgalvmax']-configDict['YAXIS']['vgalvmin']))*(configDict['YAXIS']['nmgalvmax']-configDict['YAXIS']['nmgalvmin'])+configDict['YAXIS']['nmgalvmin']
         self.yNmToV = lambda x: ((x-configDict['YAXIS']['nmgalvmin'])/(configDict['YAXIS']['nmgalvmax']-configDict['YAXIS']['nmgalvmin']))*(configDict['YAXIS']['vgalvmax']-configDict['YAXIS']['vgalvmin'])+configDict['YAXIS']['vgalvmin']
-        self.XVToNm = lambda x: ((x-configDict['ZAXIS']['vgalvmin'])/(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin']))*(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin'])+configDict['ZAXIS']['nmgalvmin']
+        self.zVToNm = lambda x: ((x-configDict['ZAXIS']['vgalvmin'])/(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin']))*(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin'])+configDict['ZAXIS']['nmgalvmin']
         self.zNmToV = lambda x: ((x-configDict['ZAXIS']['nmgalvmin'])/(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin']))*(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin'])+configDict['ZAXIS']['vgalvmin']
 
         self.xVToNmRel = lambda x: (x/(configDict['XAXIS']['vgalvmax']-configDict['XAXIS']['vgalvmin']))*(configDict['XAXIS']['nmgalvmax']-configDict['XAXIS']['nmgalvmin'])
         self.xNmToVRel = lambda x: (x/(configDict['XAXIS']['nmgalvmax']-configDict['XAXIS']['nmgalvmin']))*(configDict['XAXIS']['vgalvmax']-configDict['XAXIS']['vgalvmin'])
         self.yVToNmRel = lambda x: (x/(configDict['YAXIS']['vgalvmax']-configDict['YAXIS']['vgalvmin']))*(configDict['YAXIS']['nmgalvmax']-configDict['YAXIS']['nmgalvmin'])
         self.yNmToVRel = lambda x: (x/(configDict['YAXIS']['nmgalvmax']-configDict['YAXIS']['nmgalvmin']))*(configDict['YAXIS']['vgalvmax']-configDict['YAXIS']['vgalvmin'])
-        self.XVToNmRel = lambda x: (x/(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin']))*(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin'])
+        self.zVToNmRel = lambda x: (x/(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin']))*(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin'])
         self.zNmToVRel = lambda x: (x/(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin']))*(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin'])
 
 
@@ -234,28 +226,41 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def linkPlotToData(self, goSignal):
 
         signals = [self.xData,self.yData,self.zData]
-        print(goSignal)
+        l = len(signals)
+
         if goSignal:
+            x1 = self.sig1selCmb.currentIndex()
+            ind1 = x1 - l*((x1-x1%l)/l)
+            x2 = self.sig2selCmb.currentIndex()
+            ind2 = x2 - l*((x2-x2%l)/l)
+            x3 = self.sig3selCmb.currentIndex()
+            ind3 = x3 - l*((x3-x3%l)/l)
             self.sig1Plot.plotItem.clear()
             self.sig2Plot.plotItem.clear()
             self.sig3Plot.plotItem.clear()
             if self.powSpecConnected or self.signalConnected:
                 for s in signals:
                     s.chunkReceived.disconnect()
-            signals[self.sig1selCmb.currentIndex()].chunkReceived.connect(self.sig1Update)
-            signals[self.sig2selCmb.currentIndex()].chunkReceived.connect(self.sig2Update)
-            signals[self.sig3selCmb.currentIndex()].chunkReceived.connect(self.sig3Update)
+            signals[ind1].chunkReceived.connect(self.sig1Update)
+            signals[ind2].chunkReceived.connect(self.sig2Update)
+            signals[ind3].chunkReceived.connect(self.sig3Update)
             self.signalConnected = True
         else:
+            x1 = self.ps1selCmb.currentIndex()
+            ind1 = x1 - l*((x1-x1%l)/l)
+            x2 = self.ps2selCmb.currentIndex()
+            ind2 = x2 - l*((x2-x2%l)/l)
+            x3 = self.ps3selCmb.currentIndex()
+            ind3 = x3 - l*((x3-x3%l)/l)
             self.powSpec1Plot.plotItem.clear()
             self.powSpec2Plot.plotItem.clear()
             self.powSpec3Plot.plotItem.clear()
             if self.powSpecConnected or self.signalConnected:
                 for s in signals:
                     s.chunkReceived.disconnect()
-            signals[self.ps1selCmb.currentIndex()].chunkReceived.connect(self.ps1Update)
-            signals[self.ps2selCmb.currentIndex()].chunkReceived.connect(self.ps2Update)
-            signals[self.ps3selCmb.currentIndex()].chunkReceived.connect(self.ps3Update)
+            signals[ind1].chunkReceived.connect(self.ps1Update)
+            signals[ind2].chunkReceived.connect(self.ps2Update)
+            signals[ind3].chunkReceived.connect(self.ps3Update)
             self.powSpecConnected = True
 
 
@@ -272,9 +277,13 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def sig1Update(self,v):
 
         self.sig1Plot.plotItem.clear()
-        S = list([self.sx,self.sy,self.sz])[self.sig1selCmb.currentIndex()]
-        k = list([self.kx,self.ky,self.kz])[self.sig1selCmb.currentIndex()]
-        plottableY = np.array(v[2])*S*k
+        S = list([self.sx,self.sy,self.sz,0,0,0])[self.sig1selCmb.currentIndex()]
+        k = list([self.kx,self.ky,self.kz,0,0,0])[self.sig1selCmb.currentIndex()]
+        vToNm = list([0,0,0,self.xVToNm,self.yVToNm,self.zVToNm])[self.sig1selCmb.currentIndex()]
+        if S != 0:
+            plottableY = np.array(v[2])*S*k
+        else:
+            plottableY = vToNm(np.array(v[1]))
         plottableX = np.arange(plottableY.shape[0])
         #plottableX = np.array(v[0])-v[0][0]
         self.sig1Plot.plotItem.plot(plottableX,plottableY,pen=pens[0])
@@ -283,9 +292,13 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def sig2Update(self,v):
 
         self.sig2Plot.plotItem.clear()
-        S = list([self.sx,self.sy,self.sz])[self.sig2selCmb.currentIndex()]
-        k = list([self.kx,self.ky,self.kz])[self.sig2selCmb.currentIndex()]
-        plottableY = np.array(v[2])*S*k
+        S = list([self.sx,self.sy,self.sz,0,0,0])[self.sig2selCmb.currentIndex()]
+        k = list([self.kx,self.ky,self.kz,0,0,0])[self.sig2selCmb.currentIndex()]
+        vToNm = list([0,0,0,self.xVToNm,self.yVToNm,self.zVToNm])[self.sig1selCmb.currentIndex()]
+        if S != 0:
+            plottableY = np.array(v[2])*S*k
+        else:
+            plottableY = vToNm(np.array(v[1]))
         plottableX = np.arange(plottableY.shape[0])
         #plottableX = np.array(v[0])-v[0][0]
         self.sig2Plot.plotItem.plot(plottableX,plottableY,pen=pens[1])
@@ -294,9 +307,13 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def sig3Update(self,v):
 
         self.sig3Plot.plotItem.clear()
-        S = list([self.sx,self.sy,self.sz])[self.sig3selCmb.currentIndex()]
-        k = list([self.kx,self.ky,self.kz])[self.sig3selCmb.currentIndex()]
-        plottableY = np.array(v[2])*S*k
+        S = list([self.sx,self.sy,self.sz,0,0,0])[self.sig3selCmb.currentIndex()]
+        k = list([self.kx,self.ky,self.kz,0,0,0])[self.sig3selCmb.currentIndex()]
+        vToNm = list([0,0,0,self.xVToNm,self.yVToNm,self.zVToNm])[self.sig1selCmb.currentIndex()]
+        if S != 0:
+            plottableY = np.array(v[2])*S*k
+        else:
+            plottableY = vToNm(np.array(v[1]))
         plottableX = np.arange(plottableY.shape[0])
         #plottableX = np.array(v[0])-v[0][0]
         self.sig3Plot.plotItem.plot(plottableX,plottableY,pen=pens[2])
@@ -305,9 +322,13 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def ps1Update(self,v):
 
         self.powSpec1Plot.plotItem.clear()
-        S = list([self.sx,self.sy,self.sz])[self.ps1selCmb.currentIndex()]
-        k = list([self.kx,self.ky,self.kz])[self.ps1selCmb.currentIndex()]
-        tempY = np.array(v[2])*S*k
+        S = list([self.sx,self.sy,self.sz,0,0,0])[self.ps1selCmb.currentIndex()]
+        k = list([self.kx,self.ky,self.kz,0,0,0])[self.ps1selCmb.currentIndex()]
+        vToNm = list([0,0,0,self.xVToNm,self.yVToNm,self.zVToNm])[self.sig1selCmb.currentIndex()]
+        if S != 0:
+            tempY = np.array(v[2])*S*k
+        else:
+            tempY = vToNm(np.array(v[1]))
         sampF = 1.0/np.mean(np.array(v[0])[1:]-np.array(v[0])[:-1])
         plottableX,plottableY = welch(tempY,sampF)
         self.powSpec1Plot.plotItem.plot(plottableX,plottableY,pen=pens[0])
@@ -316,9 +337,13 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def ps2Update(self,v):
 
         self.powSpec2Plot.plotItem.clear()
-        S = list([self.sx,self.sy,self.sz])[self.ps2selCmb.currentIndex()]
-        k = list([self.kx,self.ky,self.kz])[self.ps2selCmb.currentIndex()]
-        tempY = np.array(v[1])*S*k
+        S = list([self.sx,self.sy,self.sz,0,0,0])[self.ps2selCmb.currentIndex()]
+        k = list([self.kx,self.ky,self.kz,0,0,0])[self.ps2selCmb.currentIndex()]
+        vToNm = list([0,0,0,self.xVToNm,self.yVToNm,self.zVToNm])[self.sig1selCmb.currentIndex()]
+        if S != 0:
+            tempY = np.array(v[2])*S*k
+        else:
+            tempY = vToNm(np.array(v[1]))
         sampF = 1.0/np.mean(np.array(v[0])[1:]-np.array(v[0])[:-1])
         plottableX,plottableY = welch(tempY,sampF)
         self.powSpec2Plot.plotItem.plot(plottableX,plottableY,pen=pens[1])
@@ -327,9 +352,13 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def ps3Update(self,v):
 
         self.powSpec3Plot.plotItem.clear()
-        S = list([self.sx,self.sy,self.sz])[self.ps3selCmb.currentIndex()]
-        k = list([self.kx,self.ky,self.kz])[self.ps3selCmb.currentIndex()]
-        tempY = np.array(v[1])*S*k
+        S = list([self.sx,self.sy,self.sz,0,0,0])[self.ps3selCmb.currentIndex()]
+        k = list([self.kx,self.ky,self.kz,0,0,0])[self.ps3selCmb.currentIndex()]
+        vToNm = list([0,0,0,self.xVToNm,self.yVToNm,self.zVToNm])[self.sig1selCmb.currentIndex()]
+        if S != 0:
+            tempY = np.array(v[2])*S*k
+        else:
+            tempY = vToNm(np.array(v[1]))
         sampF = 1.0/np.mean(np.array(v[0])[1:]-np.array(v[0])[:-1])
         plottableX,plottableY = welch(tempY,sampF)
         self.powSpec3Plot.plotItem.plot(plottableX,plottableY,pen=pens[0])
@@ -424,15 +453,17 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         sendCmb = self.sender()
         fatherCmb = sendCmb.parentWidget()
         listCmbChild = [c for c in fatherCmb.children() if (type(c)==QComboBox and c is not sendCmb)]
-        equalValCmb = [l for l in listCmbChild if l.currentIndex()==sendCmb.currentIndex()][0]
-        elements = list(range(sendCmb.count()))
-        elements.remove(sendCmb.currentIndex())
-        listOtherChild = [c for c in listCmbChild if c is not equalValCmb]
-        for c in listOtherChild:
-            elements.remove(c.currentIndex())
-        equalValCmb.blockSignals(True)
-        equalValCmb.setCurrentIndex(elements[0])
-        equalValCmb.blockSignals(False)
+        equalValCmbList = [l for l in listCmbChild if l.currentIndex()==sendCmb.currentIndex()]
+        if equalValCmbList != []:
+            equalValCmb = equalValCmbList[0]
+            elements = list(range(sendCmb.count()))
+            elements.remove(sendCmb.currentIndex())
+            listOtherChild = [c for c in listCmbChild if c is not equalValCmb]
+            for c in listOtherChild:
+                elements.remove(c.currentIndex())
+            equalValCmb.blockSignals(True)
+            equalValCmb.setCurrentIndex(elements[0])
+            equalValCmb.blockSignals(False)
 
         if self.xData != None:
             print(sendCmb.objectName())
@@ -682,7 +713,6 @@ class ButtonThread(QThread):
 
     def run(self):
 
-        print('ciao')
         while self.go:
             sleep(0.2)
             self.lemma()
