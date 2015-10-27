@@ -636,7 +636,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>398</width>
+                <width>403</width>
                 <height>464</height>
                </rect>
               </property>
@@ -987,13 +987,34 @@
                     </widget>
                    </item>
                    <item row="1" column="2">
-                    <widget class="QDoubleSpinBox" name="xTrapPosNumDbl"/>
+                    <widget class="QDoubleSpinBox" name="xTrapPosNumDbl">
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                     <property name="buttonSymbols">
+                      <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                    </widget>
                    </item>
                    <item row="2" column="2">
-                    <widget class="QDoubleSpinBox" name="yTrapPosNumDbl"/>
+                    <widget class="QDoubleSpinBox" name="yTrapPosNumDbl">
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                     <property name="buttonSymbols">
+                      <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                    </widget>
                    </item>
                    <item row="3" column="2">
-                    <widget class="QDoubleSpinBox" name="zTrapPosNumDbl"/>
+                    <widget class="QDoubleSpinBox" name="zTrapPosNumDbl">
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                     <property name="buttonSymbols">
+                      <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                    </widget>
                    </item>
                   </layout>
                  </item>

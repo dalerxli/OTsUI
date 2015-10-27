@@ -22,13 +22,14 @@ except:
 
 from libs.epzInterpreter import Interpreter
 from libs.usefulVar import pens
+from time import sleep
 
 setConfigOption('background', 'w')
 setConfigOption('foreground', (100,100,100))
 
 INCR = 0.01
-DEC = 100
-CHUNK = 1000
+DEC = 1
+CHUNK = 512
 NOTLEN = 1000
 
 
@@ -214,6 +215,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.zData.yDataReceived.connect(self.trapTrack)
         self.zData.zDataReceived.connect(self.qpdTrack)
 
+        sleep(0.2)
+
         self.xInterpreter.circulaBufferOn()
         self.yInterpreter.circulaBufferOn()
         self.zInterpreter.circulaBufferOn()
@@ -231,7 +234,11 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def linkPlotToData(self, goSignal):
 
         signals = [self.xData,self.yData,self.zData]
+        print(goSignal)
         if goSignal:
+            self.sig1Plot.plotItem.clear()
+            self.sig2Plot.plotItem.clear()
+            self.sig3Plot.plotItem.clear()
             if self.powSpecConnected or self.signalConnected:
                 for s in signals:
                     s.chunkReceived.disconnect()
@@ -240,6 +247,9 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
             signals[self.sig3selCmb.currentIndex()].chunkReceived.connect(self.sig3Update)
             self.signalConnected = True
         else:
+            self.powSpec1Plot.plotItem.clear()
+            self.powSpec2Plot.plotItem.clear()
+            self.powSpec3Plot.plotItem.clear()
             if self.powSpecConnected or self.signalConnected:
                 for s in signals:
                     s.chunkReceived.disconnect()
@@ -265,7 +275,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         S = list([self.sx,self.sy,self.sz])[self.sig1selCmb.currentIndex()]
         k = list([self.kx,self.ky,self.kz])[self.sig1selCmb.currentIndex()]
         plottableY = np.array(v[2])*S*k
-        plottableX = np.array(v[0])-v[0][0]
+        plottableX = np.arange(plottableY.shape[0])
+        #plottableX = np.array(v[0])-v[0][0]
         self.sig1Plot.plotItem.plot(plottableX,plottableY,pen=pens[0])
 
 
@@ -275,8 +286,9 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         S = list([self.sx,self.sy,self.sz])[self.sig2selCmb.currentIndex()]
         k = list([self.kx,self.ky,self.kz])[self.sig2selCmb.currentIndex()]
         plottableY = np.array(v[2])*S*k
-        plottableX = np.array(v[0])-v[0][0]
-        self.sig1P2ot.plotItem.plot(plottableX,plottableY,pen=pens[1])
+        plottableX = np.arange(plottableY.shape[0])
+        #plottableX = np.array(v[0])-v[0][0]
+        self.sig2Plot.plotItem.plot(plottableX,plottableY,pen=pens[1])
 
 
     def sig3Update(self,v):
@@ -285,7 +297,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         S = list([self.sx,self.sy,self.sz])[self.sig3selCmb.currentIndex()]
         k = list([self.kx,self.ky,self.kz])[self.sig3selCmb.currentIndex()]
         plottableY = np.array(v[2])*S*k
-        plottableX = np.array(v[0])-v[0][0]
+        plottableX = np.arange(plottableY.shape[0])
+        #plottableX = np.array(v[0])-v[0][0]
         self.sig3Plot.plotItem.plot(plottableX,plottableY,pen=pens[2])
 
 
@@ -422,7 +435,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         equalValCmb.blockSignals(False)
 
         if self.xData != None:
-            self.linkPlotToData((sendCmb is self.sig1selCmb or sendCmb is self.sig1selCmb or sendCmb is self.sig1selCmb))
+            print(sendCmb.objectName())
+            self.linkPlotToData((sendCmb is self.sig1selCmb or sendCmb is self.sig2selCmb or sendCmb is self.sig3selCmb))
         
     
     def setScaledValue(self,rec):
@@ -491,27 +505,42 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def trapPadControl(self):
 
         culprit = self.sender()
+        print(culprit.objectName())
+        if culprit is self.xPlusTrapBtn:
+            lemma = self.incrementTrapX
+        elif culprit is self.yPlusTrapBtn:
+            lemma = self.incrementTrapY
+        elif culprit is self.zPlusTrapBtn:
+            lemma = self.incrementTrapZ
+        elif culprit is self.xMinusTrapBtn:
+            lemma = self.decrementTrapX
+        elif culprit is self.yMinusTrapBtn:
+            lemma = self.decrementTrapY
+        elif culprit is self.zMinusTrapBtn:
+            lemma = self.decrementTrapZ
+        print('lemma down')
+        self.buttonChecker = ButtonThread(lemma)
+        self.buttonChecker.start()
+        print('thread started')
 
 
+    def stopTrap(self):
 
-    def count(self):
-
-        self.c += 1
-        print(self.c)
+        self.buttonChecker.go = False
 
 
     def incrementTrapY(self):
 
         if self.yTrapPosNumDbl.value() >= self.yTrapPadStepNumDbl.maximum():
             return None
-        self.yInterpreter.setDAC(self.yTrapPosNumDbl.value()+self.yTrapPadStepNumDbl.value())
+        self.yInterpreter.setDacHard(self.yTrapPosNumDbl.value()+self.yTrapPadStepNumDbl.value())
 
 
     def decrementTrapY(self):
 
         if self.yTrapPosNumDbl.value() <= self.yTrapPadStepNumDbl.minimum():
             return None
-        self.yInterpreter.setDAC(self.yTrapPosNumDbl.value()-self.yTrapPadStepNumDbl.value())
+        self.yInterpreter.setDacHard(self.yTrapPosNumDbl.value()-self.yTrapPadStepNumDbl.value())
 
 
     def incrementTrapX(self):
@@ -525,21 +554,21 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
         if self.xTrapPosNumDbl.value() <= self.xTrapPadStepNumDbl.minimum():
             return None
-        self.xInterpreter.setDAC(self.yTrapPosNumDbl.value()-self.yTrapPadStepNumDbl.value())
+        self.xInterpreter.setDacHard(self.yTrapPosNumDbl.value()-self.yTrapPadStepNumDbl.value())
 
 
     def incrementTrapZ(self):
 
         if self.zTrapPosNumDbl.value() >= self.zTrapPadStepNumDbl.maximum():
             return None
-        self.zInterpreter.setDAC(self.zTrapPosNumDbl.value()+self.zTrapPadStepNumDbl.value())
+        self.zInterpreter.setDacHard(self.zTrapPosNumDbl.value()+self.zTrapPadStepNumDbl.value())
 
 
     def decrementTrapZ(self):
 
         if self.zTrapPosNumDbl.value() <= self.zTrapPadStepNumDbl.maximum():
             return None
-        self.zInterpreter.setDAC(self.zTrapPosNumDbl.value()+self.zTrapPadStepNumDbl.value())
+        self.zInterpreter.setDacHard(self.zTrapPosNumDbl.value()+self.zTrapPadStepNumDbl.value())
 
 
     def numConnections(self):
@@ -632,22 +661,28 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.xMinusTrapBtn.pressed.connect(self.trapPadControl)
         self.yMinusTrapBtn.pressed.connect(self.trapPadControl)
         self.zMinusTrapBtn.pressed.connect(self.trapPadControl)
+        self.xPlusTrapBtn.released.connect(self.stopTrap)
+        self.yPlusTrapBtn.released.connect(self.stopTrap)
+        self.zPlusTrapBtn.released.connect(self.stopTrap)
+        self.xMinusTrapBtn.released.connect(self.stopTrap)
+        self.yMinusTrapBtn.released.connect(self.stopTrap)
+        self.zMinusTrapBtn.released.connect(self.stopTrap)
         self.connectBtn.clicked.connect(self.epzConnect)
 
         
 
 class ButtonThread(QThread):
 
-    def __init__(self,button,func):
+    def __init__(self,func):
 
-        if type(button) != QPushButton:
-            raise TypeError('You can only assign a \'QPushButton\' object to \'button\'')
-        self.button = button
+        super(ButtonThread,self).__init__()
         self.lemma = func
+        self.go = True
 
 
     def run(self):
 
-        while self.button.isDown():
-
+        print('ciao')
+        while self.go:
+            sleep(0.2)
             self.lemma()
