@@ -20,7 +20,7 @@ try:
 except:
     import libs.epz as epz
 
-from libs.epzInterpreter import Interpreter
+from libs.epzInterpreter import Commander as Interpreter
 from libs.usefulVar import pens
 from time import sleep
 
@@ -97,7 +97,6 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.pathConnections()
         self.actionConnections()
         self.buttonConnections()
-        self.genericConnections()
 
 
     def createConfigDict(self,parser):
@@ -118,26 +117,12 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         parser.read(self.cfgFile)
         configDict = self.createConfigDict(parser)
 
-        xvM = float(configDict['XAXIS']['vgalvmax'])
-        xvm = float(configDict['XAXIS']['vgalvmin'])
-        xM = float(configDict['XAXIS']['nmgalvmax'])
-        xm = float(configDict['XAXIS']['nmgalvmin'])
-        yvM = float(configDict['YAXIS']['vgalvmax'])
-        yvm = float(configDict['YAXIS']['vgalvmin'])
-        yM = float(configDict['YAXIS']['nmgalvmax'])
-        ym = float(configDict['YAXIS']['nmgalvmin'])
-        zvM = float(configDict['ZAXIS']['vgalvmax'])
-        zvm = float(configDict['ZAXIS']['vgalvmin'])
-        zM = float(configDict['ZAXIS']['nmgalvmax'])
-        zm = float(configDict['ZAXIS']['nmgalvmin'])
-
-        self.xVToNm = lambda x: ((x-xvm)/(xvM-xvm))*(xM-xm)+xm
-        self.xNmToV = lambda x: ((x-xm)/(xM-xm))*(xvM-xvm)+xvm
-        self.yVToNm = lambda x: ((x-yvm)/(yvM-yvm))*(yM-ym)+ym
-        self.yNmToV = lambda x: ((x-ym)/(yM-ym))*(yvM-yvm)+yvm
-        self.zVToNm = lambda x: ((x-zvm)/(zvM-zvm))*(zM-zm)+zm
-        self.zNmToV = lambda x: ((x-zm)/(zM-zm))*(zvM-zvm)+zvm
-
+        self.xVToNm = lambda x: ((x-configDict['XAXIS']['vgalvmin'])/(configDict['XAXIS']['vgalvmax']-configDict['XAXIS']['vgalvmin']))*(configDict['XAXIS']['nmgalvmax']-configDict['XAXIS']['nmgalvmin'])+configDict['XAXIS']['nmgalvmin']
+        self.xNmToV = lambda x: ((x-configDict['XAXIS']['nmgalvmin'])/(configDict['XAXIS']['nmgalvmax']-configDict['XAXIS']['nmgalvmin']))*(configDict['XAXIS']['vgalvmax']-configDict['XAXIS']['vgalvmin'])+configDict['XAXIS']['vgalvmin']
+        self.yVToNm = lambda x: ((x-configDict['YAXIS']['vgalvmin'])/(configDict['YAXIS']['vgalvmax']-configDict['YAXIS']['vgalvmin']))*(configDict['YAXIS']['nmgalvmax']-configDict['YAXIS']['nmgalvmin'])+configDict['YAXIS']['nmgalvmin']
+        self.yNmToV = lambda x: ((x-configDict['YAXIS']['nmgalvmin'])/(configDict['YAXIS']['nmgalvmax']-configDict['YAXIS']['nmgalvmin']))*(configDict['YAXIS']['vgalvmax']-configDict['YAXIS']['vgalvmin'])+configDict['YAXIS']['vgalvmin']
+        self.zVToNm = lambda x: ((x-configDict['ZAXIS']['vgalvmin'])/(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin']))*(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin'])+configDict['ZAXIS']['nmgalvmin']
+        self.zNmToV = lambda x: ((x-configDict['ZAXIS']['nmgalvmin'])/(configDict['ZAXIS']['nmgalvmax']-configDict['ZAXIS']['nmgalvmin']))*(configDict['ZAXIS']['vgalvmax']-configDict['ZAXIS']['vgalvmin'])+configDict['ZAXIS']['vgalvmin']
 
         self.xVToNmRel = lambda x: (x/(configDict['XAXIS']['vgalvmax']-configDict['XAXIS']['vgalvmin']))*(configDict['XAXIS']['nmgalvmax']-configDict['XAXIS']['nmgalvmin'])
         self.xNmToVRel = lambda x: (x/(configDict['XAXIS']['nmgalvmax']-configDict['XAXIS']['nmgalvmin']))*(configDict['XAXIS']['vgalvmax']-configDict['XAXIS']['vgalvmin'])
@@ -238,36 +223,44 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.linkPlotToData(self.plotTabs.currentIndex()==0)
 
 
-    def changePlotTab(self):
-        if self.xData != None:
-            self.linkPlotToData(self.plotTabs.currentIndex()==0)
-
-
     def linkPlotToData(self, goSignal):
 
-        signals = [self.xData,self.yData,self.zData,self.xData,self.yData,self.zData]
+        signals = [self.xData,self.yData,self.zData]
+        l = len(signals)
 
         if goSignal:
+            x1 = self.sig1selCmb.currentIndex()
+            ind1 = x1 - l*((x1-x1%l)/l)
+            x2 = self.sig2selCmb.currentIndex()
+            ind2 = x2 - l*((x2-x2%l)/l)
+            x3 = self.sig3selCmb.currentIndex()
+            ind3 = x3 - l*((x3-x3%l)/l)
             self.sig1Plot.plotItem.clear()
             self.sig2Plot.plotItem.clear()
             self.sig3Plot.plotItem.clear()
             if self.powSpecConnected or self.signalConnected:
-                for s in signals[:3]:
+                for s in signals:
                     s.chunkReceived.disconnect()
-            signals[self.sig1selCmb.currentIndex()].chunkReceived.connect(self.sig1Update)
-            signals[self.sig2selCmb.currentIndex()].chunkReceived.connect(self.sig2Update)
-            signals[self.sig3selCmb.currentIndex()].chunkReceived.connect(self.sig3Update)
+            signals[ind1].chunkReceived.connect(self.sig1Update)
+            signals[ind2].chunkReceived.connect(self.sig2Update)
+            signals[ind3].chunkReceived.connect(self.sig3Update)
             self.signalConnected = True
         else:
+            x1 = self.ps1selCmb.currentIndex()
+            ind1 = x1 - l*((x1-x1%l)/l)
+            x2 = self.ps2selCmb.currentIndex()
+            ind2 = x2 - l*((x2-x2%l)/l)
+            x3 = self.ps3selCmb.currentIndex()
+            ind3 = x3 - l*((x3-x3%l)/l)
             self.powSpec1Plot.plotItem.clear()
             self.powSpec2Plot.plotItem.clear()
             self.powSpec3Plot.plotItem.clear()
             if self.powSpecConnected or self.signalConnected:
-                for s in signals[:3]:
+                for s in signals:
                     s.chunkReceived.disconnect()
-            signals[self.ps1selCmb.currentIndex()].chunkReceived.connect(self.ps1Update)
-            signals[self.ps2selCmb.currentIndex()].chunkReceived.connect(self.ps2Update)
-            signals[self.ps3selCmb.currentIndex()].chunkReceived.connect(self.ps3Update)
+            signals[ind1].chunkReceived.connect(self.ps1Update)
+            signals[ind2].chunkReceived.connect(self.ps2Update)
+            signals[ind3].chunkReceived.connect(self.ps3Update)
             self.powSpecConnected = True
 
 
@@ -299,11 +292,9 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def sig2Update(self,v):
 
         self.sig2Plot.plotItem.clear()
-        print(self.sig2selCmb.currentIndex())
         S = list([self.sx,self.sy,self.sz,0,0,0])[self.sig2selCmb.currentIndex()]
         k = list([self.kx,self.ky,self.kz,0,0,0])[self.sig2selCmb.currentIndex()]
-        vToNm = list([0,0,0,self.xVToNm,self.yVToNm,self.zVToNm])[self.sig2selCmb.currentIndex()]
-        print(vToNm)
+        vToNm = list([0,0,0,self.xVToNm,self.yVToNm,self.zVToNm])[self.sig1selCmb.currentIndex()]
         if S != 0:
             plottableY = np.array(v[2])*S*k
         else:
@@ -318,7 +309,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.sig3Plot.plotItem.clear()
         S = list([self.sx,self.sy,self.sz,0,0,0])[self.sig3selCmb.currentIndex()]
         k = list([self.kx,self.ky,self.kz,0,0,0])[self.sig3selCmb.currentIndex()]
-        vToNm = list([0,0,0,self.xVToNm,self.yVToNm,self.zVToNm])[self.sig1se3Cmb.currentIndex()]
+        vToNm = list([0,0,0,self.xVToNm,self.yVToNm,self.zVToNm])[self.sig1selCmb.currentIndex()]
         if S != 0:
             plottableY = np.array(v[2])*S*k
         else:
@@ -708,11 +699,6 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.yMinusTrapBtn.released.connect(self.stopTrap)
         self.zMinusTrapBtn.released.connect(self.stopTrap)
         self.connectBtn.clicked.connect(self.epzConnect)
-
-
-    def genericConnections(self):
-
-        self.plotTabs.currentChanged.connect(self.changePlotTab)
 
         
 

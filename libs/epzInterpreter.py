@@ -53,8 +53,8 @@ SWITCH_SPI2:g
 KILL:k
 '''
 
-
-class Interpreter(object):
+## It implement a series of functions that simplify sending command to EpsilonPI
+class Commander(object):
 
     def __init__(self,env,device=None,tag='CMD'):
 
@@ -205,3 +205,276 @@ class Interpreter(object):
 
         self.startSafeState(0,1)
 
+
+'''
+GET_DEVICE_TYPE:a
+GET_EXT_ADC_RANGE:b
+GET_EXT_ADC_VINMIN:c
+GET_EXT_ADC_VINMAX:d
+GET_INT_ADC_RESOLUTION:e
+IS_ADCBUF_PRESENT:f
+GET_ADCBUF_VINMIN:g
+GET_ADCBUF_VINMAX:h
+GET_ADCBUF_VOUTMIN:i
+GET_ADCBUF_VOUTMAX:j
+GET_DAC_VREF:k
+GET_DAC_POLARITY:l
+'''
+
+## It implements a series of functions that simplify querying EpsilonPI parameters. The suffix "Deaf" means that it can only ask the parameters value but it cannot "hear" the response.
+class DeafQuerist(object):
+
+    def __init__(self,env,device=None,tag='REQPAR'):
+
+        self.query = epz.CMD(env,device,tag=tag)
+
+
+    ## Asks which device type it is talking to
+    def askDevice(self):
+
+        self.query.send('GET_DEVICE_TYPE')
+
+
+    ## Asks the voltage range for the ADC board
+    def askAdcRange(self):
+
+        self.query.send('GET_EXT_ADC_RANGE')
+
+
+    ## Asks the ADC board minimum input voltage
+    def askAdcMin(self):
+
+        self.query.send('GET_EXT_ADC_VINMIN')
+
+
+    ## Asks the ADC board maximum input voltage
+    def askAdcMax(self):
+
+        self.query.send('GET_EXT_ADC_VINMAX')
+
+
+    ## Asks the ADCresolutioon in bits
+    def askAdcResolution(self):
+
+        self.query.send('GET_INT_ADC_RESOLUTION')
+
+
+    ## Asks whether the ADC buffer is present or not
+    def askAdcBufPresence(self):
+
+        self.query.send('IS_ADCBUF_PRESENT')
+
+
+    ## Asks the ADC buffer minimum input voltage
+    def askAdcBufInMin(self):
+
+        self.query.send('GET_ADCBUF_VINMIN')
+
+
+    ## Asks the ADC buffer maximum input voltage
+    def askAdcBufInMax(self):
+
+        self.query.send('GET_ADCBUF_VINMAX')
+
+
+    ## Asks the ADC buffer minimum output voltage
+    def askAdcBufOutMin(self):
+
+        self.query.send('GET_ADCBUF_VOUTMIN')
+
+
+    ## Asks the ADC buffer maximum output voltage
+    def askAdcBufOutMax(self):
+
+        self.query.send('GET_ADCBUF_VOUTMAX')
+
+
+    ## Asks the DAC reference voltage
+    def askDacRef(self):
+
+        self.query.send('GET_DAC_VREF')
+
+
+    ## Asks the DAC polarity
+    def askDacPolarity(self):
+
+        self.query.send('GET_DAC_POLARITY')
+
+
+try:
+    try:
+        from PyQt5.QtCore import pyqtSignal, QThread
+    except:
+        from PyQt4.QtCore import pyqtSignal, QThread
+
+
+    class QtQuerist(DeafQuerist):
+
+        def __init__(self,env,device=None,tagQ='REQPAR',tagA='SNDPAR'):
+
+            if not isinstance(env,epz.Environment):
+                raise TypeError('You\'ve got to pas an Environment object to \'env\'')
+            DeafQuerist.__init__(self,env,device,tagQ)
+            self.respTag = tagA
+            self.env = env
+            self.device = device
+            self.currentResp = None
+
+
+        def setEar(self):
+
+            ear = epz.QtCMDREC(self.env,self.device,self.respTag,True)
+            ear.respReceived.connect(self.processResp)
+            return ear
+
+
+        def processResp(self,resp):
+
+            self.currentResp = resp
+
+
+        def askDevice(self):
+
+            ear = self.setEar()
+            ear.start()
+            DeafQuerist.askDevice(self)
+            while self.currentResp is None:
+                continue
+            newResp = self.currentResp
+            self.currentResp = None
+
+            return newResp
+
+
+        def askAdcRange(self):
+
+            ear = self.setEar()
+            ear.start()
+            DeafQuerist.askAdcRange(self)
+            while self.currentResp is None:
+                continue
+            newResp = self.currentResp
+            self.currentResp = None
+
+            return newResp
+
+
+        def askAdcMax(self):
+
+            ear = self.setEar()
+            ear.start()
+            DeafQuerist.askAdcMax(self)
+            while self.currentResp is None:
+                continue
+            newResp = self.currentResp
+            self.currentResp = None
+
+            return newResp
+
+
+        def askAdcMin(self):
+
+            ear = self.setEar()
+            ear.start()
+            DeafQuerist.askAdcMin(self)
+            while self.currentResp is None:
+                continue
+            newResp = self.currentResp
+            self.currentResp = None
+
+            return newResp
+
+
+        def askAdcBufPresence(self):
+
+            ear = self.setEar()
+            ear.start()
+            DeafQuerist.askAdcBufPresence(self)
+            while self.currentResp is None:
+                continue
+            newResp = self.currentResp
+            self.currentResp = None
+
+            return newResp
+
+
+        def askAdcBufInMax(self):
+
+            ear = self.setEar()
+            ear.start()
+            DeafQuerist.askAdcBufInMax(self)
+            while self.currentResp is None:
+                continue
+            newResp = self.currentResp
+            self.currentResp = None
+
+            return newResp
+
+
+        def askAdcBufInMin(self):
+
+            ear = self.setEar()
+            ear.start()
+            DeafQuerist.askAdcBufInMin(self)
+            while self.currentResp is None:
+                continue
+            newResp = self.currentResp
+            self.currentResp = None
+
+            return newResp
+
+
+        def askAdcBufOutMax(self):
+
+            ear = self.setEar()
+            ear.start()
+            DeafQuerist.askAdcBufOutMax(self)
+            while self.currentResp is None:
+                continue
+            newResp = self.currentResp
+            self.currentResp = None
+
+            return newResp
+
+
+        def askAdcBufOutMin(self):
+
+            ear = self.setEar()
+            ear.start()
+            DeafQuerist.askAdcBufOutMin(self)
+            while self.currentResp is None:
+                continue
+            newResp = self.currentResp
+            self.currentResp = None
+
+            return newResp
+
+
+        def askDacRef(self):
+
+            ear = self.setEar()
+            ear.start()
+            DeafQuerist.askDacRef(self)
+            while self.currentResp is None:
+                continue
+            newResp = self.currentResp
+            self.currentResp = None
+
+            return newResp
+
+
+        def askDacPolarity(self):
+
+            ear = self.setEar()
+            ear.start()
+            DeafQuerist.askDacPolarity(self)
+            while self.currentResp is None:
+                continue
+            newResp = self.currentResp
+            self.currentResp = None
+
+            return newResp
+
+
+except ImportError:
+    pass

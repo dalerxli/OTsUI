@@ -76,8 +76,6 @@ class CMD(object):
 
         self.tag = tag
         self.socket = self.context.socket(zmq.PUB)
-        print(self.pubport)
-        print(environment.epserver)
         self.socket.connect("tcp://{0}:{1}".format(environment.epserver, self.pubport))
 
     def send(self, cmd, values=[]):
@@ -90,12 +88,13 @@ class CMD(object):
 
 
 class SkelCMDREC(object):
-    def __init__(self, environment,device = None,tag='RES'):
+    def __init__(self, environment,device = None,tag='RES',oneShot = False):
         self.context = environment.context
         self.subport = environment.subport
         self.epserver = environment.epserver
         self.tag = tag
         self.listen = True
+        self.oneShot = oneShot
         if device is None:
             self.device = environment.device
         else:
@@ -115,6 +114,12 @@ class SkelCMDREC(object):
         
     def run(self):
         self.setZmq()
+
+        if self.oneShot:
+            body = self.socket.recv_string()
+            resp = body.strip(self.head)
+            self.react(resp)
+            return True
         
         while self.listen:
             body = self.socket.recv_string()
@@ -233,10 +238,10 @@ class DATA(Skeldata, threading.Thread):
 
 class CMDREC(SkelCMDREC,threading.Thread):
     
-    def __init__(self,environment,device = None,tag = 'RES'):
+    def __init__(self,environment,device = None,tag = 'RES',oneShot = False):
         
         threading.Thread.__init__(self)
-        SkelCMDREC.__init__(self, environment,device,tag)
+        SkelCMDREC.__init__(self, environment,device,tag,oneShot)
 
 
 try:
@@ -277,10 +282,10 @@ try:
         
         respReceived = pyqtSignal(str,name='respReceived')
         
-        def __init__(self,environment,device = None,tag = 'RES'):
+        def __init__(self,environment,device = None,tag = 'RES',oneShot = False):
             
             QThread.__init__(self)
-            CMDREC.__init__(self, environment,device,tag)
+            SkelCMDREC.__init__(self, environment,device,tag,oneShot)
             
         
         def react(self,resp):
