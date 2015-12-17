@@ -10,6 +10,8 @@ try:
 except:
     from libs import epz
 
+from time import sleep
+
 # N set the triggers. The triggers are, in order, adc (deflection), dac (z position), time
 # 1 = used, 0 = not used
 
@@ -191,13 +193,13 @@ class Commander(object):
     # @param state The state you want to start. 1
     def startSafeState(self,state,init):
 
-        self.cmd.send('SET_MODSAFE',[state,init])
+        self.cmd.send('START_MODSAFE',[state,init])
 
 
     ## Turns on the feedback
     def feedbackOn(self):
 
-        self.cmd.send('SET_MODEDBG',2)
+        self.cmd.send('START_MODSAFE',[2,0])
 
 
     ## Brings he system to the "rest" state
@@ -302,19 +304,29 @@ class DeafQuerist(object):
 
 
 try:
+    import sys
+
+    CURRMOD = list(sys.modules.keys())
     try:
-        from PyQt5.QtCore import pyqtSignal, QThread
+        ENV = 'PyQt5'
+        CURRMOD.index(ENV)
+        from PyQt5.QtCore import QObject,pyqtSignal
     except:
-        from PyQt4.QtCore import pyqtSignal, QThread
+        ENV = 'PyQt4'
+        CURRMOD.index(ENV)
+        from PyQt4.QtCore import QObject,pyqtSignal
 
 
-    class QtQuerist(DeafQuerist):
+    class QtQuerist(DeafQuerist,QObject):
+
+        heardSomething = pyqtSignal(str,name='heardSomething')
 
         def __init__(self,env,device=None,tagQ='REQPAR',tagA='SNDPAR'):
 
             if not isinstance(env,epz.Environment):
                 raise TypeError('You\'ve got to pas an Environment object to \'env\'')
             DeafQuerist.__init__(self,env,device,tagQ)
+            QObject.__init__(self)
             self.respTag = tagA
             self.env = env
             self.device = device
@@ -324,156 +336,113 @@ try:
         def setEar(self):
 
             ear = epz.QtCMDREC(self.env,self.device,self.respTag,True)
-            ear.respReceived.connect(self.processResp)
             return ear
 
 
         def processResp(self,resp):
 
+            print('processing')
             self.currentResp = resp
+            self.heardSomething.emit(resp)
 
 
         def askDevice(self):
 
             ear = self.setEar()
+            ear.respReceived.connect(self.processResp)
             ear.start()
+            sleep(0.2)
             DeafQuerist.askDevice(self)
-            while self.currentResp is None:
-                continue
-            newResp = self.currentResp
-            self.currentResp = None
-
-            return newResp
 
 
         def askAdcRange(self):
 
             ear = self.setEar()
+            ear.respReceived.connect(self.processResp)
             ear.start()
+            sleep(0.2)
             DeafQuerist.askAdcRange(self)
-            while self.currentResp is None:
-                continue
-            newResp = self.currentResp
-            self.currentResp = None
-
-            return newResp
 
 
         def askAdcMax(self):
 
             ear = self.setEar()
+            ear.respReceived.connect(self.processResp)
             ear.start()
+            sleep(0.2)
             DeafQuerist.askAdcMax(self)
-            while self.currentResp is None:
-                continue
-            newResp = self.currentResp
-            self.currentResp = None
-
-            return newResp
 
 
         def askAdcMin(self):
 
             ear = self.setEar()
+            ear.respReceived.connect(self.processResp)
             ear.start()
+            sleep(0.2)
             DeafQuerist.askAdcMin(self)
-            while self.currentResp is None:
-                continue
-            newResp = self.currentResp
-            self.currentResp = None
-
-            return newResp
 
 
         def askAdcBufPresence(self):
 
             ear = self.setEar()
+            ear.respReceived.connect(self.processResp)
             ear.start()
+            sleep(0.2)
             DeafQuerist.askAdcBufPresence(self)
-            while self.currentResp is None:
-                continue
-            newResp = self.currentResp
-            self.currentResp = None
-
-            return newResp
 
 
         def askAdcBufInMax(self):
 
             ear = self.setEar()
+            ear.respReceived.connect(self.processResp)
             ear.start()
+            sleep(0.2)
             DeafQuerist.askAdcBufInMax(self)
-            while self.currentResp is None:
-                continue
-            newResp = self.currentResp
-            self.currentResp = None
-
-            return newResp
 
 
         def askAdcBufInMin(self):
 
             ear = self.setEar()
+            ear.respReceived.connect(self.processResp)
             ear.start()
+            sleep(0.2)
             DeafQuerist.askAdcBufInMin(self)
-            while self.currentResp is None:
-                continue
-            newResp = self.currentResp
-            self.currentResp = None
-
-            return newResp
 
 
         def askAdcBufOutMax(self):
 
             ear = self.setEar()
+            ear.respReceived.connect(self.processResp)
             ear.start()
+            sleep(0.2)
             DeafQuerist.askAdcBufOutMax(self)
-            while self.currentResp is None:
-                continue
-            newResp = self.currentResp
-            self.currentResp = None
-
-            return newResp
 
 
         def askAdcBufOutMin(self):
 
             ear = self.setEar()
+            ear.respReceived.connect(self.processResp)
             ear.start()
+            sleep(0.2)
             DeafQuerist.askAdcBufOutMin(self)
-            while self.currentResp is None:
-                continue
-            newResp = self.currentResp
-            self.currentResp = None
-
-            return newResp
 
 
         def askDacRef(self):
 
             ear = self.setEar()
+            ear.respReceived.connect(self.processResp)
             ear.start()
+            sleep(0.2)
             DeafQuerist.askDacRef(self)
-            while self.currentResp is None:
-                continue
-            newResp = self.currentResp
-            self.currentResp = None
-
-            return newResp
 
 
         def askDacPolarity(self):
 
             ear = self.setEar()
+            ear.respReceived.connect(self.processResp)
             ear.start()
+            sleep(0.2)
             DeafQuerist.askDacPolarity(self)
-            while self.currentResp is None:
-                continue
-            newResp = self.currentResp
-            self.currentResp = None
-
-            return newResp
 
 
 except ImportError:

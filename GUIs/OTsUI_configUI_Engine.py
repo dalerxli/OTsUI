@@ -1,6 +1,25 @@
+import sys
+CURRMOD = list(sys.modules.keys())
+try:
+    ENV = 'PyQt5'
+    CURRMOD.index(ENV)
+    from PyQt5.QtWidgets import QFileDialog, QMainWindow, QSpinBox, QRadioButton,QDialog
+    from PyQt5.QtWidgets import QDoubleSpinBox, QMessageBox, QCheckBox, QLineEdit, QInputDialog
+    from PyQt5.QtGui import QIcon, QPixmap, QColor, QPalette
+    from PyQt5.QtCore import QThread, pyqtSignal
+    from PyQt5 import QtCore
+    import pyqtgraph as pg
+
+except:
+    ENV = 'PyQt4'
+    CURRMOD.index(ENV)
+    from PyQt4.QtGui import QFileDialog, QMainWindow,QIcon, QPixmap, QColor, QRadioButton,QDialog
+    from PyQt4.QtGui import QSpinBox, QDoubleSpinBox, QMessageBox, QCheckBox, QLineEdit, QInputDialog, QPalette
+    from PyQt4.QtCore import QThread, pyqtSignal
+    from PyQt4 import QtCore
+    import pyqtgraph as pg
+
 from GUIs.OTsUI_configUI_Dialog import *
-from PyQt5.Qt import QStyle, QFileDialog
-from PyQt5.QtWidgets import QDialog, QMessageBox
 import configparser as cfg
 from os.path import splitext
 from libs.usefulVar import nameTypeDict, gettingSettingSignalDict

@@ -1,4 +1,14 @@
-from PyQt5.QtWidgets import *
+import sys
+CURRMOD = list(sys.modules.keys())
+try:
+    ENV = 'PyQt5'
+    CURRMOD.index(ENV)
+    from PyQt5.QtWidgets import *
+
+except:
+    ENV = 'PyQt4'
+    CURRMOD.index(ENV)
+    from PyQt4.QtGui import *
 
 nameTypeDict = {QLabel:'Label',
                 QSpinBox:'Num',

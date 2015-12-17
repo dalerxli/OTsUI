@@ -1,0 +1,1 @@
+pyuic5 -o GUIs\configUI_dialog.py GUIs\configUI_dialog.ui

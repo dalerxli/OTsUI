@@ -80,6 +80,7 @@ class CMD(object):
 
     def send(self, cmd, values=[]):
         msg = '{0}:{2}:{1}'.format(self.device, cmd, self.tag)
+
         if type(values) != list :
             values = [values]
         for v in values:
@@ -88,13 +89,14 @@ class CMD(object):
 
 
 class SkelCMDREC(object):
-    def __init__(self, environment,device = None,tag='RES',oneShot = False):
+    def __init__(self, environment,device = None,tag='RES',oneshot = False):
         self.context = environment.context
         self.subport = environment.subport
         self.epserver = environment.epserver
         self.tag = tag
         self.listen = True
-        self.oneShot = oneShot
+        self.setDone = False
+        self.oneShot = oneshot
         if device is None:
             self.device = environment.device
         else:
@@ -106,21 +108,37 @@ class SkelCMDREC(object):
         self.head = "{0}:{1}:".format(self.device,self.tag)
         self.socket.setsockopt_string(zmq.SUBSCRIBE,self.head)
         self.socket.connect("tcp://{0}:{1}".format(self.epserver, self.subport))
+
+        self.setDone = True
         
         
     def react(self,resp):
         pass
-        
+
+
+    def oneShotRead(self):
+
+        if not self.setDone:
+            self.setZmq()
+
+        body = self.socket.recv_string()
+        resp = body.strip(self.head).split(':')[0]
+
+        return resp
+
         
     def run(self):
-        self.setZmq()
+        if not self.setDone:
+            self.setZmq()
 
         if self.oneShot:
+
             body = self.socket.recv_string()
-            resp = body.strip(self.head)
+            resp = body.strip(self.head).split(':')[0]
             self.react(resp)
-            return True
-        
+
+            return
+
         while self.listen:
             body = self.socket.recv_string()
             resp = body.strip(self.head)
@@ -152,6 +170,7 @@ class Skeldata(object):
         self._save = False
         self._overload = False
         self.notify = False
+        self.flushing = False
         self.head = ''
 
     @property
@@ -182,6 +201,12 @@ class Skeldata(object):
         self.socket.setsockopt_string(zmq.SUBSCRIBE,self.head)
         self.socket.connect("tcp://{0}:{1}".format(self.epserver, self.subport))
 
+
+    def flushMemory(self):
+        self.queue = []
+        self.queue.append(queue.Queue())
+
+
     def actondata(self,v):
         pass
 
@@ -196,10 +221,12 @@ class Skeldata(object):
 
     def run(self):
         self.setzmq()
-        print('{0} channel on {1} starting to receive'.format(self.tag,self.device))
         while self.goahead:
             body = self.socket.recv_string()
             data = [float(x) for x in body.strip(self.head).split(':')]
+            if self.flushing:
+                self.flushMemory()
+                self.flushing = False
             if data[3] == 1.0:
                 self.save = True
             else:
@@ -227,7 +254,6 @@ class Skeldata(object):
                     self.x=[]
                     self.y=[]
                     self.z=[]
-        print('Finishing data thread')
 
 
 class DATA(Skeldata, threading.Thread):
@@ -280,16 +306,15 @@ try:
             
     class QtCMDREC(SkelCMDREC,QThread):
         
-        respReceived = pyqtSignal(str,name='respReceived')
+        respReceived = pyqtSignal(str, name='respReceived')
         
-        def __init__(self,environment,device = None,tag = 'RES',oneShot = False):
+        def __init__(self,environment,device = None,tag = 'RES',oneshot=False):
             
             QThread.__init__(self)
-            SkelCMDREC.__init__(self, environment,device,tag,oneShot)
+            SkelCMDREC.__init__(self, environment,device,tag,oneshot)
             
         
         def react(self,resp):
-            
             self.respReceived.emit(resp)
 
 

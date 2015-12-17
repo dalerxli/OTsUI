@@ -1,12 +1,33 @@
-from GUIs.OTsUI_MainGUI import *
 from pyqtgraph import setConfigOption
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog, QSlider, QDial, QDoubleSpinBox, QSpinBox, QCheckBox, QLineEdit, QComboBox, QPushButton
-from PyQt5.QtCore import QThread
+import sys
+CURRMOD = list(sys.modules.keys())
+try:
+    ENV = 'PyQt5'
+    CURRMOD.index(ENV)
+    from PyQt5.QtWidgets import QFileDialog, QMainWindow, QSpinBox, QRadioButton,QDial,QSlider,QComboBox
+    from PyQt5.QtWidgets import QDoubleSpinBox, QMessageBox, QCheckBox, QLineEdit, QInputDialog
+    from PyQt5.QtGui import QIcon, QPixmap, QColor, QPalette
+    from PyQt5.QtCore import QThread, pyqtSignal
+    from PyQt5 import QtCore
+    import pyqtgraph as pg
+
+except:
+    ENV = 'PyQt4'
+    CURRMOD.index(ENV)
+    from PyQt4.QtGui import QFileDialog, QMainWindow,QIcon, QPixmap, QColor, QRadioButton,QDial,QSlider,QComboBox
+    from PyQt4.QtGui import QSpinBox, QDoubleSpinBox, QMessageBox, QCheckBox, QLineEdit, QInputDialog, QPalette
+    from PyQt4.QtCore import QThread, pyqtSignal
+    from PyQt4 import QtCore
+    import pyqtgraph as pg
+
 import configparser as cfg
 import numpy as np
 from scipy.signal import welch
 from os import sep
 from os.path import splitext
+from time import strftime
+from datetime import datetime
+from GUIs.OTsUI_MainGUI import *
 from GUIs.OTsUI_configUI_Engine import configDial
 
 try:
@@ -21,6 +42,7 @@ except:
     import libs.epz as epz
 
 from libs.epzInterpreter import Commander as Interpreter
+from libs.epzInterpreter import QtQuerist
 from libs.usefulVar import pens
 from time import sleep
 
@@ -31,6 +53,9 @@ INCR = 0.01
 DEC = 1
 CHUNK = 512
 NOTLEN = 1000
+CONNTO = 2.0
+CONNCNT = 3
+OTEPZDEV = 3
 
 
 class OTsUI(QMainWindow,Ui_OTsUI_main):
@@ -39,7 +64,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
         super(OTsUI, self).__init__(parent)
         self.setupUi(self)
-        self.cfgFile = QFileDialog.getOpenFileName(self,'Select a configuration file',filter='Ini (*.ini)')[0]
+        if ENV == 'PyQt5': self.cfgFile = QFileDialog.getOpenFileName(self,'Select a configuration file',filter='Ini (*.ini)')[0]
+        else: self.cfgFile = QFileDialog.getOpenFileName(self,'Select a configuration file',filter='Ini (*.ini)')
         if self.cfgFile == '':
             self.cfgFile = 'config/defaultCfg.ini'
         self.kx = 1
@@ -55,6 +81,9 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
         self.powSpecConnected = False
         self.signalConnected = False
+        self.setStatus('opened')
+
+        self.connControl = hwReadyThread(self,CONNTO,CONNCNT)
 
         self.trapHomePos = [0.0,0.0,0.0]
 
@@ -179,7 +208,12 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
                     el.setSingleStep(INCR*scale)
 
 
-    def epzConnect(self):
+    def setStatus(self,status):
+
+        self.status = status
+
+
+    def setEpz(self):
 
         self.xInterpreter = Interpreter(self.otsuiEnv,self.xDevName)
         self.yInterpreter = Interpreter(self.otsuiEnv,self.yDevName)
@@ -207,20 +241,41 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.zData.yDataReceived.connect(self.trapTrack)
         self.zData.zDataReceived.connect(self.qpdTrack)
 
-        sleep(0.2)
+        self.otsuiQ = QtQuerist(self.otsuiEnv)
+        self.otsuiQ.heardSomething.connect(self.startEpz)
+        self.otsuiQ.askDevice()
+        if not self.connControl.isRunning():
+            self.connControl.timeOutSignal.connect(self.epzFailed)
+            self.connControl.start()
 
-        self.xInterpreter.circulaBufferOn()
-        self.yInterpreter.circulaBufferOn()
-        self.zInterpreter.circulaBufferOn()
+        self.linkPlotToData(self.plotTabs.currentIndex()==0)
+
+
+    def startEpz(self,resp):
+
+        if int(float(resp)) != OTEPZDEV:
+            warning = QMessageBox(self)
+            warning.setText('You are trying to use a wrong type of EpsilonPi hardware. Please check if you have '
+                            'connected the correct device or, if you are sure about the device, check the '
+                            'epz.conf file in the EpsilonPi Raspberry')
+            warning.exec_()
+            self.close()
         self.xInterpreter.startDev()
         self.yInterpreter.startDev()
         self.zInterpreter.startDev()
-
         self.xData.start()
         self.yData.start()
         self.zData.start()
 
-        self.linkPlotToData(self.plotTabs.currentIndex()==0)
+        try: self.otsuiQ.heardSomething.disconnect()
+        except: pass
+        self.setStatus('initialized')
+
+
+    def epzFailed(self):
+
+        self.setStatus('disconnected')
+        self.simpleLogger('Hardware connection failed: Starting \'offline mode\'')
 
 
     def linkPlotToData(self, goSignal):
@@ -230,34 +285,36 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
         if goSignal:
             x1 = self.sig1selCmb.currentIndex()
-            ind1 = x1 - l*((x1-x1%l)/l)
+            ind1 = int(x1 - l*((x1-x1%l)/l))
             x2 = self.sig2selCmb.currentIndex()
-            ind2 = x2 - l*((x2-x2%l)/l)
+            ind2 = int(x2 - l*((x2-x2%l)/l))
             x3 = self.sig3selCmb.currentIndex()
-            ind3 = x3 - l*((x3-x3%l)/l)
+            ind3 = int(x3 - l*((x3-x3%l)/l))
             self.sig1Plot.plotItem.clear()
             self.sig2Plot.plotItem.clear()
             self.sig3Plot.plotItem.clear()
             if self.powSpecConnected or self.signalConnected:
                 for s in signals:
-                    s.chunkReceived.disconnect()
+                    try: s.chunkReceived.disconnect()
+                    except: continue
             signals[ind1].chunkReceived.connect(self.sig1Update)
             signals[ind2].chunkReceived.connect(self.sig2Update)
             signals[ind3].chunkReceived.connect(self.sig3Update)
             self.signalConnected = True
         else:
             x1 = self.ps1selCmb.currentIndex()
-            ind1 = x1 - l*((x1-x1%l)/l)
+            ind1 = int(x1 - l*((x1-x1%l)/l))
             x2 = self.ps2selCmb.currentIndex()
-            ind2 = x2 - l*((x2-x2%l)/l)
+            ind2 = int(x2 - l*((x2-x2%l)/l))
             x3 = self.ps3selCmb.currentIndex()
-            ind3 = x3 - l*((x3-x3%l)/l)
+            ind3 = int(x3 - l*((x3-x3%l)/l))
             self.powSpec1Plot.plotItem.clear()
             self.powSpec2Plot.plotItem.clear()
             self.powSpec3Plot.plotItem.clear()
             if self.powSpecConnected or self.signalConnected:
                 for s in signals:
-                    s.chunkReceived.disconnect()
+                    try: s.chunkReceived.disconnect()
+                    except: continue
             signals[ind1].chunkReceived.connect(self.ps1Update)
             signals[ind2].chunkReceived.connect(self.ps2Update)
             signals[ind3].chunkReceived.connect(self.ps3Update)
@@ -520,14 +577,6 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
             self.yInterpreter.stopDev()
             self.zInterpreter.stopDev()
 
-            reply = QMessageBox.question(self, 'Message',
-                                               "Do you want to kill the devices (If you say yes, you'll have to turn the towers off and then on before using CoMPlEx again)?",
-                                               QMessageBox.Yes, QMessageBox.No)
-            if reply == QMessageBox.Yes:
-                self.xInterpreter.killDev()
-                self.yInterpreter.killDev()
-                self.zInterpreter.killDev()
-
             event.accept()
         else:
             event.ignore()
@@ -600,6 +649,11 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         if self.zTrapPosNumDbl.value() <= self.zTrapPadStepNumDbl.maximum():
             return None
         self.zInterpreter.setDacHard(self.zTrapPosNumDbl.value()+self.zTrapPadStepNumDbl.value())
+
+
+    def simpleLogger(self,entry):
+        completeEntry = strftime('%Y/%m/%d') + '-' + strftime('%H:%M:%S') + ' -- ' + entry + '\n'
+        self.logText.insertPlainText(completeEntry)
 
 
     def numConnections(self):
@@ -698,7 +752,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.xMinusTrapBtn.released.connect(self.stopTrap)
         self.yMinusTrapBtn.released.connect(self.stopTrap)
         self.zMinusTrapBtn.released.connect(self.stopTrap)
-        self.connectBtn.clicked.connect(self.epzConnect)
+        self.connectBtn.clicked.connect(self.setEpz)
 
         
 
@@ -716,3 +770,39 @@ class ButtonThread(QThread):
         while self.go:
             sleep(0.2)
             self.lemma()
+
+
+
+class hwReadyThread(QThread):
+
+    timeOutSignal = pyqtSignal()
+
+    def __init__(self,parent,delay=2.0,trials=3):
+
+        super(hwReadyThread,self).__init__(parent)
+        self.parent = parent
+        self.go = True
+        self.maxDelay = delay*1000
+        self.maxTrials = trials
+        self.currentTrial = 0
+
+
+    def run(self):
+        startTimeDate = datetime.now().time()
+        startTime = startTimeDate.hour*3600000+startTimeDate.minute*60000+startTimeDate.second*1000+startTimeDate.microsecond/1000
+
+        while self.go:
+            if self.parent.status == 'initialized':
+                self.go = False
+                continue
+            currTimeDate = datetime.now().time()
+            currTime = currTimeDate.hour*3600000+currTimeDate.minute*60000+currTimeDate.second*1000+currTimeDate.microsecond/1000
+            if currTime-startTime>=self.maxDelay:
+                self.currentTrial += 1
+                if self.currentTrial >= self.maxTrials:
+                    self.timeOutSignal.emit()
+                    self.go = False
+                    continue
+                else:
+                    self.parent.setEpz()
+            sleep(0.2)

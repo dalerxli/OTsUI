@@ -1,1 +1,1 @@
-pyuic5 -o GUIs\configUI_dialog.py GUIs\configUI_dialog.ui
+pyuic4 -o GUIs\OTsUI_configUI_dialog.py GUIs\OTsUI_configUI_dialog.ui

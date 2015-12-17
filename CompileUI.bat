@@ -1,1 +1,1 @@
-pyuic5 -o GUIs\OTsUI_MainGUI.py GUIs\OTsUI_MainGUI.ui
+pyuic4 -o GUIs\OTsUI_MainGUI.py GUIs\OTsUI_MainGUI.ui
