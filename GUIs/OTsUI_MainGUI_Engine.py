@@ -50,17 +50,20 @@ setConfigOption('background', 'w')
 setConfigOption('foreground', (100,100,100))
 
 INCR = 0.01
+## EPZ default parameters
 DEC = 1
 CHUNK = 512
 NOTLEN = 1000
-CONNTO = 2.0
-CONNCNT = 3
-OTEPZDEV = 3
+# Connection check parameters
+CONNTO = 2.0 # Seconds to wait for connection establishment
+CONNCNT = 3 # Number of connection trials
+OTEPZDEV = 3 # Optical tweezers epz indentifier
 
 
+# Optical tweezers interface class
 class OTsUI(QMainWindow,Ui_OTsUI_main):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, verbose=False):
 
         super(OTsUI, self).__init__(parent)
         self.setupUi(self)
@@ -68,7 +71,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         else: self.cfgFile = QFileDialog.getOpenFileName(self,'Select a configuration file',filter='Ini (*.ini)')
         if self.cfgFile == '':
             self.cfgFile = 'config/defaultCfg.ini'
-        self.kx = 1
+        # Parameters initialization
+        self.kx = 1 # X axis
         self.ky = 1
         self.kz = 1
         self.sx = 1
@@ -78,6 +82,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.dataDir = ''
         self.parDir = ''
         self.xData = None
+        self.verbose = verbose
 
         self.powSpecConnected = False
         self.signalConnected = False
@@ -211,6 +216,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
     def setStatus(self,status):
 
         self.status = status
+        if self.verbose:
+            print('Set status: {0}'.format(status))
 
 
     def setEpz(self):
@@ -562,7 +569,6 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
 
     def closeEvent(self, event):
-        print('logdir: '+self.logDir)
         reply = QMessageBox.question(self, 'Message',
             "Do you really want to close OTsUI?", QMessageBox.Yes, QMessageBox.No)
 
@@ -651,6 +657,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
         self.zInterpreter.setDacHard(self.zTrapPosNumDbl.value()+self.zTrapPadStepNumDbl.value())
 
 
+    # A function that write in a text box a string with the correspondent date and time
     def simpleLogger(self,entry):
         completeEntry = strftime('%Y/%m/%d') + '-' + strftime('%H:%M:%S') + ' -- ' + entry + '\n'
         self.logText.insertPlainText(completeEntry)
@@ -732,6 +739,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
     def actionConnections(self):
 
+        # Menu entries connections
+
         self.action_Config_File.triggered.connect(self.showDial)
         self.action_Save_Parameters.triggered.connect(self.saveParams)
         self.action_Load_Parameters.triggered.connect(self.loadParams)
@@ -739,6 +748,8 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
 
     def buttonConnections(self):
+
+        # Buttons connections
 
         self.xPlusTrapBtn.pressed.connect(self.trapPadControl)
         self.yPlusTrapBtn.pressed.connect(self.trapPadControl)
@@ -756,6 +767,7 @@ class OTsUI(QMainWindow,Ui_OTsUI_main):
 
         
 
+# A QThread that checks a parameter and then execute a specific function named "lemma"
 class ButtonThread(QThread):
 
     def __init__(self,func):
@@ -772,7 +784,7 @@ class ButtonThread(QThread):
             self.lemma()
 
 
-
+# A QThread that checks wether the correct epz hardware is connected or not
 class hwReadyThread(QThread):
 
     timeOutSignal = pyqtSignal()

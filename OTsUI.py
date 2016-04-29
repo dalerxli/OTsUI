@@ -29,7 +29,7 @@ except:
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
-    mainForm = OTsUI()
+    mainForm = OTsUI(verbose=VERBOSE)
     mainForm.show()
     
     app.exec_()
